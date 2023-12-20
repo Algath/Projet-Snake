@@ -81,23 +81,27 @@ object deplacement_snake extends App {
 
 
       if (positionX < 0) {
-        positionX = width + offsetD * sensibilite + offsetG * sensibilite
+        positionX = 0
+        offsetD = 0
+        offsetG = 0
+        positionXinit = width
+      }
+      if (positionX > width) {
+        positionX = 0
+        offsetD = 0
         offsetG = 0
         positionXinit = 0
       }
-      if (positionX > width) {
-        positionX = 0 + offsetD * sensibilite + offsetG * sensibilite
-        offsetD = 0
-        positionXinit = 0
-      }
       if (positionY < 0) {
-        positionY = height + offsetH * sensibilite + offsetB * sensibilite
+        positionY = 0
+        offsetH = 0
         offsetB = 0
-        positionYinit = 0
+        positionYinit = height
       }
       if (positionY > height) {
-        positionY = 0 + offsetH * sensibilite + offsetB * sensibilite
+        positionY = 0
         offsetH = 0
+        offsetB = 0
         positionYinit = 0
       }
 
