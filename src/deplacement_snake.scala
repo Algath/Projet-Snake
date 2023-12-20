@@ -1,4 +1,6 @@
+import deplacement_snake.offsetB
 import hevs.graphics.FunGraphics
+
 import java.awt.event.{KeyAdapter, KeyEvent}
 
 /**
@@ -7,7 +9,7 @@ import java.awt.event.{KeyAdapter, KeyEvent}
  */
 object deplacement_snake extends App {
 
-  val height : Int = 200
+  val height : Int = 900
   val width : Int = 1080
 
   val fg: FunGraphics = new FunGraphics(width, height)
@@ -17,7 +19,7 @@ object deplacement_snake extends App {
   var offsetH: Int = 0
   var offsetB: Int = 0
 
-  var sensibilite: Int = 1
+  var sensibilite: Int = 10
 
   var positionX : Int = 0
   var positionY : Int = 0
@@ -76,6 +78,29 @@ object deplacement_snake extends App {
 
       positionX = positionXinit + offsetD * sensibilite + offsetG * sensibilite
       positionY = positionYinit + offsetH * sensibilite + offsetB * sensibilite
+
+
+      if (positionX < 0) {
+        positionX = width + offsetD * sensibilite + offsetG * sensibilite
+        offsetG = 0
+        positionXinit = 0
+      }
+      if (positionX > width) {
+        positionX = 0 + offsetD * sensibilite + offsetG * sensibilite
+        offsetD = 0
+        positionXinit = 0
+      }
+      if (positionY < 0) {
+        positionY = height + offsetH * sensibilite + offsetB * sensibilite
+        offsetB = 0
+        positionYinit = 0
+      }
+      if (positionY > height) {
+        positionY = 0 + offsetH * sensibilite + offsetB * sensibilite
+        offsetH = 0
+        positionYinit = 0
+      }
+
 
       fg.clear()
       //draw our object
