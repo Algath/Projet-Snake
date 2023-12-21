@@ -9,17 +9,20 @@ import java.awt.event.{KeyAdapter, KeyEvent}
  */
 object deplacement_snake extends App {
 
+  // Taille de la fenêtre
   val height : Int = 900
   val width : Int = 1080
 
   val fg: FunGraphics = new FunGraphics(width, height)
 
+  // variables pour les déplacements
   var offsetD: Int = 0
   var offsetG: Int = 0
   var offsetH: Int = 0
   var offsetB: Int = 0
 
-  var sensibilite: Int = 10
+  // sensi
+  var sensibilite: Int = 5
 
   var positionX : Int = 0
   var positionY : Int = 0
@@ -110,7 +113,7 @@ object deplacement_snake extends App {
       //draw our object
       fg.drawRect(positionX , positionY, 75, 75)
       //refresh the screen at 60 FPS
-      fg.syncGameLogic(60)
+      fg.syncGameLogic(120)
 
 
       if(droiteAct == 1){
