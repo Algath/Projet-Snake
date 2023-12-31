@@ -21,6 +21,8 @@ object test2 extends App {
 
     val teteSerpent: Int = 1
     val proie: Int = -1
+    val obstacleMortel = -2
+    val reducteurDeSerpent = -3
 
     val longueurInitSerpent: Int = 3
     var tailleSerpent: Int = longueurInitSerpent
@@ -29,6 +31,7 @@ object test2 extends App {
     val nombresdeProiesInit: Int = 3
 
     var nombresDeProiesMangees: Int = 0
+    var nombresDeReducteurs: Int = 0
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -55,7 +58,7 @@ object test2 extends App {
         var yJ: Int = (math.random() * (maxLignes - 1)).toInt
         var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
 
-        if (grille(yJ)(xJ) < 1) {
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != obstacleMortel && grille(yJ)(xJ) != reducteurDeSerpent) {
           grille(yJ)(xJ) = proie
           countProieInit += 1
         }
@@ -63,6 +66,57 @@ object test2 extends App {
     }
 
     creerProies(nombresdeProiesInit)
+    creerReducteur(1)
+
+
+    // création d'obstacles mortels
+    def creerObstacles(nombresdObstaclesMortels: Int) {
+      var countObstacleInit: Int = 1
+      while (countObstacleInit <= nombresdObstaclesMortels) {
+
+        var yJ: Int = (math.random() * (maxLignes - 1)).toInt
+        var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
+
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != proie && grille(yJ)(xJ) != reducteurDeSerpent) {
+          grille(yJ)(xJ) = obstacleMortel
+          countObstacleInit += 1
+        }
+      }
+    }
+
+    // création de réducteurs (permet de réduire la taille du Serpent)
+    def creerReducteur(nombresReducteurs: Int) {
+      var countReducteurInit: Int = 1
+      while (countReducteurInit <= nombresReducteurs) {
+
+        var yR: Int = (math.random() * (maxLignes - 1)).toInt
+        var xR: Int = (math.random() * (maxColonnes - 1)).toInt
+
+        if (grille(yR)(xR) < 1 && grille(yR)(xR) != proie && grille(yR)(xR) != obstacleMortel) {
+          grille(yR)(xR) = reducteurDeSerpent
+          countReducteurInit += 1
+        }
+      }
+      nombresDeReducteurs = 1
+    }
+
+    def suppression(Quoi : Int ,ActiveDest : Boolean) : Unit ={
+      if(ActiveDest == true){
+        var valCase1 : Int = 0
+        for (i <- grille.indices) {
+          for (j <- grille(i).indices) {
+            valCase1 = grille(i)(j)
+            if (valCase1 == Quoi) {
+              grille(i)(j) = 0
+              nombresDeReducteurs = 0
+            }
+          }
+        }
+      }
+    }
+
+
+
 
     //---------------------------------------------------------------------------------
     // Bouger le Serpent
@@ -104,13 +158,37 @@ object test2 extends App {
       if (quoiMange == -1) {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
-        println("Mangé")
+        //println("Mangé")
         nombresDeProiesMangees += 1
         creerProies(1)
       }
-      else if (quoiMange > 1) {
+      else if (quoiMange > 1 || quoiMange == obstacleMortel) {
         jeu = "Fini"
         println(jeu)
+      }
+      else if (quoiMange == reducteurDeSerpent) {
+
+        grille(posLigne)(posColonne) = teteSerpent
+
+        tailleSerpent = (tailleSerpent / 2).toInt
+
+        if (tailleSerpent <= longueurInitSerpent) {
+          tailleSerpent = longueurInitSerpent
+        }
+
+        var valCase: Int = 0
+
+        for (i <- grille.indices) {
+          for (j <- grille(i).indices) {
+            valCase = grille(i)(j)
+            if (valCase > 0 && valCase >= tailleSerpent) {
+              grille(i)(j) = 0
+            }
+          }
+        }
+        nombresDeReducteurs = 0
+
+
       }
       else {
         //suivreTete()
@@ -173,7 +251,6 @@ object test2 extends App {
     }
 
     // Affichage du Jeu
-    // Affichage du Jeu
     def affichageDuJeu(): Unit = {
 
       val pixelsSize: Int = 20
@@ -186,9 +263,13 @@ object test2 extends App {
 
       var sensibilite: Int = 70000000
 
+      var nbObstaclesMortels: Int = 0
+
       var compteur: Int = 0
 
-      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 5 * pixelsSize, height * pixelsSize)
+      var compteursauv: Int = 0
+
+      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
 
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
@@ -235,9 +316,11 @@ object test2 extends App {
         // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
         grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
         grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.CYAN, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 60, s"Taille Serpent : ", Color.BLACK, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 77, s"${tailleSerpent.toString}", Color.RED, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 120, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
+
 
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
@@ -248,14 +331,20 @@ object test2 extends App {
               grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
             }
 
-            else if (valeur == -1) {
+            else if (valeur == proie) {
               grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+            }
+            else if (valeur == obstacleMortel) {
+              grilleJeu.drawFillRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
+            }
+            else if (valeur == reducteurDeSerpent) {
+              grilleJeu.drawRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
             }
           }
         }
         //affichageGrille()
 
-        //refresh the screen at 60 FPS
+        //refresh the screen at XXX FPS
         grilleJeu.syncGameLogic(120)
 
         // ralentir le jeux
@@ -264,8 +353,26 @@ object test2 extends App {
             //faire avancer automatiquement le serpent
             bouger(toucheSauv)
 
-            // Accélérer au fur et à mesure le serpent
             compteur += 1
+
+            // Faire disparaitre le réducteur au bout de x temps
+            if(compteur % 20 == 0) {
+              suppression(reducteurDeSerpent,true)
+            }
+
+            // Regle pour faire apparaitre un obstacle mortel
+            if (compteur >= 100 && compteur % 40 == 0) {
+              creerObstacles(1)
+              nbObstaclesMortels += 1
+              compteursauv = compteur
+            }
+
+            //Regle pour faire apparaitre un reducteur de serpent
+            if (compteur >= 200 && (math.random()*30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
+              creerReducteur(1)
+
+            }
+
 
           }
         }
@@ -294,6 +401,7 @@ object test2 extends App {
   var x: Snake = new Snake()
 
   x.affichageDuJeu()
+
 
   /*
     x.affichageGrille()
