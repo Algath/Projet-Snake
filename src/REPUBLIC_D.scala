@@ -1,12 +1,13 @@
 
 import hevs.graphics.FunGraphics
 
+import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
 import java.util.Scanner
 
 object test2 extends App {
 
-  class Snake(var maxLignes: Int = 30, var maxColonnes: Int = 90) {
+  class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
     //------------------------------------------------------------------------------------
     // Création du tableau de jeux :
@@ -27,7 +28,7 @@ object test2 extends App {
 
     val nombresdeProiesInit: Int = 3
 
-    var nombresDeProiesMangees : Int = 0
+    var nombresDeProiesMangees: Int = 0
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -183,10 +184,12 @@ object test2 extends App {
 
       var toucheSauv: Char = 'G'
 
-      var sensibiliteF : Int = 70000000
-      var sensibilite: Int = sensibiliteF
+      var sensibilite: Int = 70000000
 
-      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize, height * pixelsSize)
+      var compteur: Int = 0
+
+      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 5 * pixelsSize, height * pixelsSize)
+
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
         override def keyPressed(e: KeyEvent): Unit = {
@@ -229,6 +232,13 @@ object test2 extends App {
         grilleJeu.clear()
         //draw our object
 
+        // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
+        grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
+        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.CYAN, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 60, s"Taille Serpent : ", Color.BLACK, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 77, s"${tailleSerpent.toString}", Color.RED, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 120, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
 
@@ -240,9 +250,6 @@ object test2 extends App {
 
             else if (valeur == -1) {
               grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-            }
-            else {
-              //grilleJeu.drawFillRect(j * pixelsSize,i * pixelsSize)
             }
           }
         }
@@ -258,8 +265,8 @@ object test2 extends App {
             bouger(toucheSauv)
 
             // Accélérer au fur et à mesure le serpent
+            compteur += 1
 
-            sensibiliteF = (sensibilite * (sensibilite-nombresDeProiesMangees*10000)).toInt
           }
         }
       }
