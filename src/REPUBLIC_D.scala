@@ -21,12 +21,15 @@ object test2 extends App {
 
     val teteSerpent: Int = 1
     val proie: Int = -1
+    val obstacleMortel = -2
 
     val longueurInitSerpent: Int = 3
     var tailleSerpent: Int = longueurInitSerpent
 
 
     val nombresdeProiesInit: Int = 3
+
+    //val nombresdObstaclesMortels : Int = 0
 
     var nombresDeProiesMangees: Int = 0
 
@@ -55,7 +58,7 @@ object test2 extends App {
         var yJ: Int = (math.random() * (maxLignes - 1)).toInt
         var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
 
-        if (grille(yJ)(xJ) < 1) {
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != -2) {
           grille(yJ)(xJ) = proie
           countProieInit += 1
         }
@@ -63,6 +66,26 @@ object test2 extends App {
     }
 
     creerProies(nombresdeProiesInit)
+
+    def creerObstacles(nombresdObstaclesMortels : Int) {
+      var countObstacleInit: Int = 1
+      while (countObstacleInit <= nombresdObstaclesMortels) {
+
+        var yJ: Int = (math.random() * (maxLignes - 1)).toInt
+        var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
+
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != -1 ) {
+          grille(yJ)(xJ) = obstacleMortel
+          countObstacleInit += 1
+        }
+      }
+    }
+
+    //creerObstacles(nombresdObstaclesMortels)
+
+
+
+
 
     //---------------------------------------------------------------------------------
     // Bouger le Serpent
@@ -108,7 +131,7 @@ object test2 extends App {
         nombresDeProiesMangees += 1
         creerProies(1)
       }
-      else if (quoiMange > 1) {
+      else if (quoiMange > 1 || quoiMange == obstacleMortel) {
         jeu = "Fini"
         println(jeu)
       }
@@ -186,9 +209,11 @@ object test2 extends App {
 
       var sensibilite: Int = 70000000
 
+      var nbObstaclesMortels : Int = 0
+
       var compteur: Int = 0
 
-      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 5 * pixelsSize, height * pixelsSize)
+      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
 
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
@@ -238,6 +263,10 @@ object test2 extends App {
         grilleJeu.drawString(width * pixelsSize + 5, 60, s"Taille Serpent : ", Color.BLACK, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 77, s"${tailleSerpent.toString}", Color.RED, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 120, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 150, s"Obstacles Mortels :", Color.RED, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 170, s"${nbObstaclesMortels.toString}", Color.RED, 12)
+
+
 
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
@@ -248,8 +277,11 @@ object test2 extends App {
               grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
             }
 
-            else if (valeur == -1) {
+            else if (valeur == proie) {
               grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+            }
+            else if (valeur == obstacleMortel) {
+              grilleJeu.drawFillRect( j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
             }
           }
         }
@@ -266,6 +298,11 @@ object test2 extends App {
 
             // Accélérer au fur et à mesure le serpent
             compteur += 1
+
+            if(compteur >= 100 && compteur % 40 == 0){
+              creerObstacles(1)
+              nbObstaclesMortels += 1
+            }
 
           }
         }
