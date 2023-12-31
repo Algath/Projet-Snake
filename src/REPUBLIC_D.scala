@@ -4,9 +4,9 @@ import hevs.graphics.FunGraphics
 import java.awt.event.{KeyAdapter, KeyEvent}
 import java.util.Scanner
 
-object REPUBLIC_D extends App {
+object test2 extends App {
 
-  class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 15) {
+  class Snake(var maxLignes: Int = 30, var maxColonnes: Int = 90) {
 
     //------------------------------------------------------------------------------------
     // Création du tableau de jeux :
@@ -26,6 +26,8 @@ object REPUBLIC_D extends App {
 
 
     val nombresdeProiesInit: Int = 3
+
+    var nombresDeProiesMangees : Int = 0
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -102,6 +104,7 @@ object REPUBLIC_D extends App {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
         println("Mangé")
+        nombresDeProiesMangees += 1
         creerProies(1)
       }
       else if (quoiMange > 1) {
@@ -172,17 +175,18 @@ object REPUBLIC_D extends App {
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
 
-      val heightpixels: Int = 20
-      val widthpixels: Int = 20
+      val pixelsSize: Int = 20
+
 
       val height: Int = maxLignes
       val width: Int = maxColonnes
 
       var toucheSauv: Char = 'G'
 
-      var sensibilite: Int = 70000000
+      var sensibiliteF : Int = 70000000
+      var sensibilite: Int = sensibiliteF
 
-      val grilleJeu: FunGraphics = new FunGraphics(width * widthpixels, height * heightpixels)
+      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize, height * pixelsSize)
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
         override def keyPressed(e: KeyEvent): Unit = {
@@ -231,11 +235,14 @@ object REPUBLIC_D extends App {
             var valeur: Int = grille(i)(j)
 
             if (valeur > 0) {
-              grilleJeu.drawFilledCircle(j * widthpixels, i * heightpixels, height)
+              grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
             }
 
             else if (valeur == -1) {
-              grilleJeu.drawCircle(j * widthpixels, i * heightpixels, height)
+              grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+            }
+            else {
+              //grilleJeu.drawFillRect(j * pixelsSize,i * pixelsSize)
             }
           }
         }
@@ -243,10 +250,16 @@ object REPUBLIC_D extends App {
 
         //refresh the screen at 60 FPS
         grilleJeu.syncGameLogic(120)
+
+        // ralentir le jeux
         for (i: Int <- 0 to sensibilite) {
           if (sensibilite == i) {
+            //faire avancer automatiquement le serpent
             bouger(toucheSauv)
-            sensibilite -= 100000
+
+            // Accélérer au fur et à mesure le serpent
+
+            sensibiliteF = (sensibilite * (sensibilite-nombresDeProiesMangees*10000)).toInt
           }
         }
       }
