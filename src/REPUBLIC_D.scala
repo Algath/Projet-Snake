@@ -1,12 +1,13 @@
 
 import hevs.graphics.FunGraphics
 
+import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
 import java.util.Scanner
 
-object REPUBLIC_D extends App {
+object test2 extends App {
 
-  class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 15) {
+  class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
     //------------------------------------------------------------------------------------
     // Création du tableau de jeux :
@@ -20,12 +21,17 @@ object REPUBLIC_D extends App {
 
     val teteSerpent: Int = 1
     val proie: Int = -1
+    val obstacleMortel = -2
 
     val longueurInitSerpent: Int = 3
     var tailleSerpent: Int = longueurInitSerpent
 
 
     val nombresdeProiesInit: Int = 3
+
+    //val nombresdObstaclesMortels : Int = 0
+
+    var nombresDeProiesMangees: Int = 0
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -52,7 +58,7 @@ object REPUBLIC_D extends App {
         var yJ: Int = (math.random() * (maxLignes - 1)).toInt
         var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
 
-        if (grille(yJ)(xJ) < 1) {
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != -2) {
           grille(yJ)(xJ) = proie
           countProieInit += 1
         }
@@ -60,6 +66,26 @@ object REPUBLIC_D extends App {
     }
 
     creerProies(nombresdeProiesInit)
+
+    def creerObstacles(nombresdObstaclesMortels : Int) {
+      var countObstacleInit: Int = 1
+      while (countObstacleInit <= nombresdObstaclesMortels) {
+
+        var yJ: Int = (math.random() * (maxLignes - 1)).toInt
+        var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
+
+        if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != -1 ) {
+          grille(yJ)(xJ) = obstacleMortel
+          countObstacleInit += 1
+        }
+      }
+    }
+
+    //creerObstacles(nombresdObstaclesMortels)
+
+
+
+
 
     //---------------------------------------------------------------------------------
     // Bouger le Serpent
@@ -102,9 +128,10 @@ object REPUBLIC_D extends App {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
         println("Mangé")
+        nombresDeProiesMangees += 1
         creerProies(1)
       }
-      else if (quoiMange > 1) {
+      else if (quoiMange > 1 || quoiMange == obstacleMortel) {
         jeu = "Fini"
         println(jeu)
       }
@@ -172,8 +199,8 @@ object REPUBLIC_D extends App {
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
 
-      val heightpixels: Int = 20
-      val widthpixels: Int = 20
+      val pixelsSize: Int = 20
+
 
       val height: Int = maxLignes
       val width: Int = maxColonnes
@@ -182,7 +209,12 @@ object REPUBLIC_D extends App {
 
       var sensibilite: Int = 70000000
 
-      val grilleJeu: FunGraphics = new FunGraphics(width * widthpixels, height * heightpixels)
+      var nbObstaclesMortels : Int = 0
+
+      var compteur: Int = 0
+
+      val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
+
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
         override def keyPressed(e: KeyEvent): Unit = {
@@ -225,17 +257,31 @@ object REPUBLIC_D extends App {
         grilleJeu.clear()
         //draw our object
 
+        // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
+        grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
+        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.CYAN, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 60, s"Taille Serpent : ", Color.BLACK, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 77, s"${tailleSerpent.toString}", Color.RED, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 120, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 150, s"Obstacles Mortels :", Color.RED, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 170, s"${nbObstaclesMortels.toString}", Color.RED, 12)
+
+
+
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
 
             var valeur: Int = grille(i)(j)
 
             if (valeur > 0) {
-              grilleJeu.drawFilledCircle(j * widthpixels, i * heightpixels, height)
+              grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
             }
 
-            else if (valeur == -1) {
-              grilleJeu.drawCircle(j * widthpixels, i * heightpixels, height)
+            else if (valeur == proie) {
+              grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+            }
+            else if (valeur == obstacleMortel) {
+              grilleJeu.drawFillRect( j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
             }
           }
         }
@@ -243,10 +289,21 @@ object REPUBLIC_D extends App {
 
         //refresh the screen at 60 FPS
         grilleJeu.syncGameLogic(120)
+
+        // ralentir le jeux
         for (i: Int <- 0 to sensibilite) {
           if (sensibilite == i) {
+            //faire avancer automatiquement le serpent
             bouger(toucheSauv)
-            sensibilite -= 100000
+
+            // Accélérer au fur et à mesure le serpent
+            compteur += 1
+
+            if(compteur >= 100 && compteur % 40 == 0){
+              creerObstacles(1)
+              nbObstaclesMortels += 1
+            }
+
           }
         }
       }
