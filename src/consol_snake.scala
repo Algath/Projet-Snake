@@ -73,7 +73,6 @@ object consol_snake extends App {
               snake.postionSnake(XInitialHead, YInitialHead, taille, deplacementx, deplacementy)
             case 'd' | 'D' =>
               YInitialHead += 1 // Modifier la coordonnée Y vers la droite
-              deplacementx += 1
               snake.postionSnake(XInitialHead, YInitialHead, taille,deplacementx, deplacementy)
             case _ => println("Commande invalide")
           }
