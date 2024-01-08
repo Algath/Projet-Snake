@@ -100,9 +100,9 @@ object test2 extends App {
       nombresDeReducteurs = 1
     }
 
-    def suppression(Quoi : Int ,ActiveDest : Boolean) : Unit ={
-      if(ActiveDest == true){
-        var valCase1 : Int = 0
+    def suppression(Quoi: Int, ActiveDest: Boolean): Unit = {
+      if (ActiveDest == true) {
+        var valCase1: Int = 0
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
             valCase1 = grille(i)(j)
@@ -114,8 +114,6 @@ object test2 extends App {
         }
       }
     }
-
-
 
 
     //---------------------------------------------------------------------------------
@@ -261,7 +259,7 @@ object test2 extends App {
 
       var toucheSauv: Char = 'G'
 
-      var sensibilite: Int = 70000000
+      var sensibilite: Int = 99999999
 
       var nbObstaclesMortels: Int = 0
 
@@ -282,25 +280,25 @@ object test2 extends App {
           if (e.getKeyCode == KeyEvent.VK_RIGHT) {
             if (orientationInitTete != 'E') {
               toucheSauv = 'D'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_LEFT) {
             if (orientationInitTete != 'O') {
               toucheSauv = 'G'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_UP) {
             if (orientationInitTete != 'S') {
               toucheSauv = 'H'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_DOWN) {
             if (orientationInitTete != 'N') {
               toucheSauv = 'B'
-              bouger(toucheSauv)
+
             }
           }
 
@@ -315,13 +313,13 @@ object test2 extends App {
 
         // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
         grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
-        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.CYAN, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.ORANGE, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
 
-
+        // Pour dessiner le jeu
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
 
@@ -344,38 +342,34 @@ object test2 extends App {
         }
         //affichageGrille()
 
-        //refresh the screen at XXX FPS
-        grilleJeu.syncGameLogic(120)
 
-        // ralentir le jeux
-        for (i: Int <- 0 to sensibilite) {
-          if (sensibilite == i) {
-            //faire avancer automatiquement le serpent
-            bouger(toucheSauv)
+        //faire avancer automatiquement le serpent
 
-            compteur += 1
+        bouger(toucheSauv)
 
-            // Faire disparaitre le réducteur au bout de x temps
-            if(compteur % 20 == 0) {
-              suppression(reducteurDeSerpent,true)
-            }
+        compteur += 1
 
-            // Regle pour faire apparaitre un obstacle mortel
-            if (compteur >= 100 && compteur % 40 == 0) {
-              creerObstacles(1)
-              nbObstaclesMortels += 1
-              compteursauv = compteur
-            }
-
-            //Regle pour faire apparaitre un reducteur de serpent
-            if (compteur >= 200 && (math.random()*30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
-              creerReducteur(1)
-
-            }
-
-
-          }
+        // Faire disparaitre le réducteur au bout de x temps
+        if (compteur % 20 == 0) {
+          suppression(reducteurDeSerpent, true)
         }
+
+        // Regle pour faire apparaitre un obstacle mortel
+        if (compteur >= 100 && compteur % 40 == 0) {
+          creerObstacles(1)
+          nbObstaclesMortels += 1
+          compteursauv = compteur
+        }
+
+        //Regle pour faire apparaitre un reducteur de serpent
+        if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
+          creerReducteur(1)
+
+        }
+
+        //refresh the screen at XXX FPS
+        grilleJeu.syncGameLogic(2)
+
       }
       println("Tu es nul !!!!!")
     }
@@ -398,7 +392,7 @@ object test2 extends App {
     }
   }
 
-  var x: Snake = new Snake()
+  var x: Snake = new Snake(10, 30)
 
   x.affichageDuJeu()
 
