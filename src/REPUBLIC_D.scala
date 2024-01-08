@@ -1,5 +1,6 @@
 
 import hevs.graphics.FunGraphics
+import hevs.graphics.samples.TestTurtleGraphics.t.drawBackground
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
@@ -310,11 +311,12 @@ object test2 extends App {
 
       while (jeu == "Marche") {
 
-        grilleJeu.clear()
-        //draw our object
 
         // Pour eviter le scintillement
         grilleJeu.frontBuffer.synchronized {
+
+          grilleJeu.clear()
+          //draw our object
 
           // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
           grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
@@ -329,34 +331,6 @@ object test2 extends App {
             for (j <- grille(i).indices) {
 
               var valeur: Int = grille(i)(j)
-              /*
-                        valeur match {
-                          case 0 => {
-                            // Affiche rien
-                          }
-                          case 1 => {
-                            val bm = new GraphicsBitmap("/res/SnakeTete.jpg")
-
-                            grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 252, bm)
-                          }
-                          case proie => {
-                            grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-                          }
-                          case obstacleMortel => {
-                            grilleJeu.drawFillRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
-                          }
-                          case reducteurDeSerpent => {
-                            grilleJeu.drawRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
-                          }
-                          case 2 => {
-                            grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-                          }
-
-
-                        }
-            */
-
-
 
               if (valeur == teteSerpent) {
                 val a = new GraphicsBitmap("/res/snake1.jpg")
@@ -428,7 +402,7 @@ object test2 extends App {
         }
 
         //refresh the screen at XXX FPS
-        grilleJeu.syncGameLogic(5)
+        grilleJeu.syncGameLogic(4)
 
       }
       println("Tu es nul !!!!!")
@@ -452,7 +426,7 @@ object test2 extends App {
     }
   }
 
-  var x: Snake = new Snake(10, 30)
+  var x: Snake = new Snake(15, 30)
 
   x.affichageDuJeu()
 
