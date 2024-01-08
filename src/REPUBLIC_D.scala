@@ -384,7 +384,7 @@ object test2 extends App {
         compteur += 1
 
         // Faire disparaitre le réducteur au bout de x temps
-        if (compteur % 20 == 0) {
+        if (compteur % 30 == 0) {
           suppression(reducteurDeSerpent, true)
         }
 
