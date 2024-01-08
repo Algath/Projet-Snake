@@ -1,5 +1,6 @@
 
 import hevs.graphics.FunGraphics
+import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
@@ -100,9 +101,9 @@ object test2 extends App {
       nombresDeReducteurs = 1
     }
 
-    def suppression(Quoi : Int ,ActiveDest : Boolean) : Unit ={
-      if(ActiveDest == true){
-        var valCase1 : Int = 0
+    def suppression(Quoi: Int, ActiveDest: Boolean): Unit = {
+      if (ActiveDest == true) {
+        var valCase1: Int = 0
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
             valCase1 = grille(i)(j)
@@ -114,8 +115,6 @@ object test2 extends App {
         }
       }
     }
-
-
 
 
     //---------------------------------------------------------------------------------
@@ -261,7 +260,7 @@ object test2 extends App {
 
       var toucheSauv: Char = 'G'
 
-      var sensibilite: Int = 70000000
+      var sensibilite: Int = 99999999
 
       var nbObstaclesMortels: Int = 0
 
@@ -273,34 +272,35 @@ object test2 extends App {
 
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
+
         override def keyPressed(e: KeyEvent): Unit = {
 
 
-          if (e.getKeyChar == 't') {
-            println("Test 'A' was pressed")
+          if (e.getKeyChar == 'W') {
+            println("Wahoooooo tu es trop fort !")
           }
           if (e.getKeyCode == KeyEvent.VK_RIGHT) {
             if (orientationInitTete != 'E') {
               toucheSauv = 'D'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_LEFT) {
             if (orientationInitTete != 'O') {
               toucheSauv = 'G'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_UP) {
             if (orientationInitTete != 'S') {
               toucheSauv = 'H'
-              bouger(toucheSauv)
+
             }
           }
           if (e.getKeyCode == KeyEvent.VK_DOWN) {
             if (orientationInitTete != 'N') {
               toucheSauv = 'B'
-              bouger(toucheSauv)
+
             }
           }
 
@@ -313,69 +313,123 @@ object test2 extends App {
         grilleJeu.clear()
         //draw our object
 
-        // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
-        grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
-        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.CYAN, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
-        grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
+        // Pour eviter le scintillement
+        grilleJeu.frontBuffer.synchronized {
+
+          // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
+          grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
+          grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.ORANGE, 12)
+          grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
+          grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+          grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
+          grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
+
+          // Pour dessiner le jeu
+          for (i <- grille.indices) {
+            for (j <- grille(i).indices) {
+
+              var valeur: Int = grille(i)(j)
+              /*
+                        valeur match {
+                          case 0 => {
+                            // Affiche rien
+                          }
+                          case 1 => {
+                            val bm = new GraphicsBitmap("/res/SnakeTete.jpg")
+
+                            grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 252, bm)
+                          }
+                          case proie => {
+                            grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+                          }
+                          case obstacleMortel => {
+                            grilleJeu.drawFillRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
+                          }
+                          case reducteurDeSerpent => {
+                            grilleJeu.drawRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
+                          }
+                          case 2 => {
+                            grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+                          }
 
 
-        for (i <- grille.indices) {
-          for (j <- grille(i).indices) {
+                        }
+            */
 
-            var valeur: Int = grille(i)(j)
 
-            if (valeur > 0) {
-              grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-            }
 
-            else if (valeur == proie) {
-              grilleJeu.drawCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-            }
-            else if (valeur == obstacleMortel) {
-              grilleJeu.drawFillRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
-            }
-            else if (valeur == reducteurDeSerpent) {
-              grilleJeu.drawRect(j * pixelsSize, i * pixelsSize, pixelsSize, pixelsSize)
+              if (valeur == teteSerpent) {
+                val a = new GraphicsBitmap("/res/snake1.jpg")
+                var angle: Double = 0
+                toucheSauv match {
+
+                  case 'G' => angle = 0
+                  case 'B' => angle = math.Pi / 2 * 3
+                  case 'D' => angle = math.Pi
+                  case 'H' => angle = math.Pi / 2
+
+                }
+
+                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
+
+
+                //grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+              }
+              else if (valeur >= 2) {
+                val b = new GraphicsBitmap("/res/Corps.jpg")
+
+                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
+              }
+              else if (valeur == proie) {
+                val c = new GraphicsBitmap("/res/pommes.jpg")
+
+                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
+              }
+              else if (valeur == obstacleMortel) {
+                val d = new GraphicsBitmap("/res/bombes.jpeg")
+
+                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
+              }
+              else if (valeur == reducteurDeSerpent) {
+                val e = new GraphicsBitmap("/res/cadeau.jpg")
+
+                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
+              }
+
+
             }
           }
         }
         //affichageGrille()
 
-        //refresh the screen at XXX FPS
-        grilleJeu.syncGameLogic(120)
 
-        // ralentir le jeux
-        for (i: Int <- 0 to sensibilite) {
-          if (sensibilite == i) {
-            //faire avancer automatiquement le serpent
-            bouger(toucheSauv)
+        //faire avancer automatiquement le serpent
 
-            compteur += 1
+        bouger(toucheSauv)
 
-            // Faire disparaitre le réducteur au bout de x temps
-            if(compteur % 20 == 0) {
-              suppression(reducteurDeSerpent,true)
-            }
+        compteur += 1
 
-            // Regle pour faire apparaitre un obstacle mortel
-            if (compteur >= 100 && compteur % 40 == 0) {
-              creerObstacles(1)
-              nbObstaclesMortels += 1
-              compteursauv = compteur
-            }
-
-            //Regle pour faire apparaitre un reducteur de serpent
-            if (compteur >= 200 && (math.random()*30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
-              creerReducteur(1)
-
-            }
-
-
-          }
+        // Faire disparaitre le réducteur au bout de x temps
+        if (compteur % 20 == 0) {
+          suppression(reducteurDeSerpent, true)
         }
+
+        // Regle pour faire apparaitre un obstacle mortel
+        if (compteur >= 100 && compteur % 40 == 0) {
+          creerObstacles(1)
+          nbObstaclesMortels += 1
+          compteursauv = compteur
+        }
+
+        //Regle pour faire apparaitre un reducteur de serpent
+        if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
+          creerReducteur(1)
+
+        }
+
+        //refresh the screen at XXX FPS
+        grilleJeu.syncGameLogic(5)
+
       }
       println("Tu es nul !!!!!")
     }
@@ -398,7 +452,7 @@ object test2 extends App {
     }
   }
 
-  var x: Snake = new Snake()
+  var x: Snake = new Snake(10, 30)
 
   x.affichageDuJeu()
 
