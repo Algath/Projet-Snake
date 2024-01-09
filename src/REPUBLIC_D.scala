@@ -123,8 +123,8 @@ object test2 extends App {
     def bouger(dir: Char): Unit = {
 
 
-      var posY: Int = chercheValeurDansLeTableau(1)(0)
-      var posX: Int = chercheValeurDansLeTableau(1)(1)
+      var posY: Int = chercheValeurDansLeTableau(teteSerpent)(0)
+      var posX: Int = chercheValeurDansLeTableau(teteSerpent)(1)
 
       suivreTete()
 
@@ -155,7 +155,7 @@ object test2 extends App {
     def mangerParTete(posLigne: Int, posColonne: Int): Unit = {
       var quoiMange: Int = grille(posLigne)(posColonne)
 
-      if (quoiMange == -1) {
+      if (quoiMange == proie) {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
         //println("Mangé")
@@ -170,7 +170,7 @@ object test2 extends App {
 
         grille(posLigne)(posColonne) = teteSerpent
 
-        tailleSerpent = (tailleSerpent / 2).toInt
+        tailleSerpent = (tailleSerpent / 2)
 
         if (tailleSerpent <= longueurInitSerpent) {
           tailleSerpent = longueurInitSerpent
