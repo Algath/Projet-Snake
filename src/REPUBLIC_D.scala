@@ -1,11 +1,11 @@
 
 import hevs.graphics.FunGraphics
-import hevs.graphics.samples.TestTurtleGraphics.t.drawBackground
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
-import java.util.Scanner
+import javax.sound.sampled.{AudioSystem, Clip}
+
 
 object test2 extends App {
 
@@ -34,6 +34,9 @@ object test2 extends App {
 
     var nombresDeProiesMangees: Int = 0
     var nombresDeReducteurs: Int = 0
+
+    // Musique
+    var music: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.mp3")
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -335,6 +338,8 @@ object test2 extends App {
             grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
             grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
 
+            // Lancement de la musique
+            music.play()
             // Pour dessiner le jeu
             for (i <- grille.indices) {
               for (j <- grille(i).indices) {
@@ -435,6 +440,34 @@ object test2 extends App {
         }
       }
       return resultpos
+    }
+  }
+
+  class AudioPlayer(path: String) {
+    try {
+      // Create audio input URL
+      val url = this.getClass.getClassLoader.getResource(path)
+      val audioStream = AudioSystem.getAudioInputStream(url)
+      // Obtain clip
+      audioClip = AudioSystem.getClip.asInstanceOf[Clip]
+      audioClip.open(audioStream)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+    var audioClip: Clip = null
+
+    def play(): Unit = {
+      // Open stream and play
+      try {
+        if (!audioClip.isOpen) audioClip.open()
+        audioClip.stop()
+        audioClip.setMicrosecondPosition(0)
+        audioClip.start()
+      } catch {
+        case e: Exception =>
+          e.printStackTrace()
+      }
     }
   }
 
