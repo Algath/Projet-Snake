@@ -36,7 +36,7 @@ object test2 extends App {
     var nombresDeReducteurs: Int = 0
 
     // Musique
-    var music: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.mp3")
+    var music: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.wav")
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -253,6 +253,9 @@ object test2 extends App {
       println(text)
     }
 
+    // Lancement de la musique
+    music.play()
+
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
 
@@ -338,8 +341,6 @@ object test2 extends App {
             grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
             grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
 
-            // Lancement de la musique
-            music.play()
             // Pour dessiner le jeu
             for (i <- grille.indices) {
               for (j <- grille(i).indices) {
@@ -396,6 +397,7 @@ object test2 extends App {
           bouger(toucheSauv)
 
           compteur += 1
+          music.repet += 1
 
           // Faire disparaitre le réducteur au bout de x temps
           if (compteur % 30 == 0) {
@@ -444,6 +446,8 @@ object test2 extends App {
   }
 
   class AudioPlayer(path: String) {
+    var audioClip: Clip = null
+    var repet: Int = 0
     try {
       // Create audio input URL
       val url = this.getClass.getClassLoader.getResource(path)
@@ -453,20 +457,22 @@ object test2 extends App {
       audioClip.open(audioStream)
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        println(s"File type not supported: ${e.getMessage}")
     }
-    var audioClip: Clip = null
 
     def play(): Unit = {
       // Open stream and play
       try {
         if (!audioClip.isOpen) audioClip.open()
         audioClip.stop()
-        audioClip.setMicrosecondPosition(0)
+        audioClip.setFramePosition(0)
         audioClip.start()
+        audioClip.loop(-1)
+        Thread.sleep(2000)
       } catch {
         case e: Exception =>
           e.printStackTrace()
+          println("hello")
       }
     }
   }
