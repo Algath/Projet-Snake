@@ -1,9 +1,11 @@
 
 import hevs.graphics.FunGraphics
+import hevs.graphics.samples.TestTurtleGraphics.t.drawBackground
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
+import java.util.Scanner
 
 object test2 extends App {
 
@@ -15,7 +17,7 @@ object test2 extends App {
       0
     }
 
-    // définition des objets sur la grille (chiffres pour les reconnaîtres)
+    // définition des objets sur la grille (chiffres pour les reconnaîtres
     var jeu: String = "Marche"
 
 
@@ -168,7 +170,7 @@ object test2 extends App {
 
         grille(posLigne)(posColonne) = teteSerpent
 
-        tailleSerpent = tailleSerpent / 2
+        tailleSerpent = (tailleSerpent / 2)
 
         if (tailleSerpent <= longueurInitSerpent) {
           tailleSerpent = longueurInitSerpent
@@ -267,7 +269,7 @@ object test2 extends App {
 
       var compteursauv: Int = 0
 
-      var start : Boolean = true
+      var start: Boolean = true
 
       val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
 
@@ -305,7 +307,7 @@ object test2 extends App {
             }
           }
           if (e.getKeyChar == 's') {
-            if (start == true){
+            if (start == true) {
               start = false
             }
             else {
@@ -317,102 +319,105 @@ object test2 extends App {
       })
 
       while (jeu == "Marche") {
-        if(start == true) {
+        if (start == true) {
+          println(start)
+          // Pour eviter le scintillement
+          grilleJeu.frontBuffer.synchronized {
 
-        // Pour eviter le scintillement
-        grilleJeu.frontBuffer.synchronized {
+            grilleJeu.clear()
+            //draw our object
 
-          grilleJeu.clear()
-          //draw our object
+            // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
+            grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
+            grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.ORANGE, 12)
+            grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
+            grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
+            grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
+            grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
 
-          // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
-          grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
-          grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.ORANGE, 12)
-          grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
-          grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
-          grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
-          grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
+            // Pour dessiner le jeu
+            for (i <- grille.indices) {
+              for (j <- grille(i).indices) {
 
-          // Pour dessiner le jeu
-          for (i <- grille.indices) {
-            for (j <- grille(i).indices) {
+                var valeur: Int = grille(i)(j)
 
-              var valeur: Int = grille(i)(j)
+                if (valeur == teteSerpent) {
+                  val a = new GraphicsBitmap("/res/snake1.jpg")
+                  var angle: Double = 0
+                  toucheSauv match {
 
-              if (valeur == teteSerpent) {
-                val a = new GraphicsBitmap("/res/snake1.jpg")
-                var angle: Double = 0
-                toucheSauv match {
+                    case 'G' => angle = 0
+                    case 'B' => angle = math.Pi / 2 * 3
+                    case 'D' => angle = math.Pi
+                    case 'H' => angle = math.Pi / 2
 
-                  case 'G' => angle = 0
-                  case 'B' => angle = math.Pi / 2 * 3
-                  case 'D' => angle = math.Pi
-                  case 'H' => angle = math.Pi / 2
+                  }
 
+                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
+
+
+                  //grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
+                }
+                else if (valeur >= 2) {
+                  val b = new GraphicsBitmap("/res/Corps.jpg")
+
+                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
+                }
+                else if (valeur == proie) {
+                  val c = new GraphicsBitmap("/res/pommes.jpg")
+
+                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
+                }
+                else if (valeur == obstacleMortel) {
+                  val d = new GraphicsBitmap("/res/bombes.jpeg")
+
+                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
+                }
+                else if (valeur == reducteurDeSerpent) {
+                  val e = new GraphicsBitmap("/res/cadeau.jpg")
+
+                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
                 }
 
-                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
 
-
-                //grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
               }
-              else if (valeur >= 2) {
-                val b = new GraphicsBitmap("/res/Corps.jpg")
-
-                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
-              }
-              else if (valeur == proie) {
-                val c = new GraphicsBitmap("/res/pommes.jpg")
-
-                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
-              }
-              else if (valeur == obstacleMortel) {
-                val d = new GraphicsBitmap("/res/bombes.jpeg")
-
-                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
-              }
-              else if (valeur == reducteurDeSerpent) {
-                val e = new GraphicsBitmap("/res/cadeau.jpg")
-
-                grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
-              }
-
-
             }
           }
+          //affichageGrille()
+
+
+          //faire avancer automatiquement le serpent
+
+          bouger(toucheSauv)
+
+          compteur += 1
+
+          // Faire disparaitre le réducteur au bout de x temps
+          if (compteur % 30 == 0) {
+            suppression(reducteurDeSerpent, true)
+          }
+
+          // Regle pour faire apparaitre un obstacle mortel
+          if (compteur >= 100 && compteur % 40 == 0) {
+            creerObstacles(1)
+            nbObstaclesMortels += 1
+            compteursauv = compteur
+          }
+
+          //Regle pour faire apparaitre un reducteur de serpent
+          if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
+            creerReducteur(1)
+
+          }
+
+          //refresh the screen at XXX FPS
+          grilleJeu.syncGameLogic(4)
         }
-        //affichageGrille()
-
-
-        //faire avancer automatiquement le serpent
-
-        bouger(toucheSauv)
-
-        compteur += 1
-
-        // Faire disparaitre le réducteur au bout de x temps
-        if (compteur % 30 == 0) {
-          suppression(reducteurDeSerpent, true)
-        }
-
-        // Regle pour faire apparaitre un obstacle mortel
-        if (compteur >= 100 && compteur % 40 == 0) {
-          creerObstacles(1)
-          nbObstaclesMortels += 1
-          compteursauv = compteur
-        }
-
-        //Regle pour faire apparaitre un reducteur de serpent
-        if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
-          creerReducteur(1)
-
-        }
-
-        //refresh the screen at XXX FPS
-        grilleJeu.syncGameLogic(4)
+        println(start)
       }
-      }
+
       println("Tu es nul !!!!!")
+
     }
 
 
