@@ -253,6 +253,8 @@ object test2 extends App {
       println(text)
     }
 
+    //Menus
+
     // Lancement de la musique
     music.play()
 
@@ -397,7 +399,6 @@ object test2 extends App {
           bouger(toucheSauv)
 
           compteur += 1
-          music.repet += 1
 
           // Faire disparaitre le réducteur au bout de x temps
           if (compteur % 30 == 0) {
@@ -416,6 +417,9 @@ object test2 extends App {
             creerReducteur(1)
 
           }
+          // mémorisation du score
+          var memoryScore: Array[Int] = Array.ofDim(10)
+          //memoryScore() = nombresDeProiesMangees
 
           //refresh the screen at XXX FPS
           grilleJeu.syncGameLogic(4)
@@ -447,7 +451,6 @@ object test2 extends App {
 
   class AudioPlayer(path: String) {
     var audioClip: Clip = null
-    var repet: Int = 0
     try {
       // Create audio input URL
       val url = this.getClass.getClassLoader.getResource(path)
