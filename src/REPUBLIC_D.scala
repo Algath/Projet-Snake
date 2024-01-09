@@ -1,11 +1,9 @@
 
 import hevs.graphics.FunGraphics
-import hevs.graphics.samples.TestTurtleGraphics.t.drawBackground
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
-import java.util.Scanner
 
 object test2 extends App {
 
@@ -17,7 +15,7 @@ object test2 extends App {
       0
     }
 
-    // définition des objets sur la grille (chiffres pour les reconnaîtres
+    // définition des objets sur la grille (chiffres pour les reconnaîtres)
     var jeu: String = "Marche"
 
 
@@ -123,8 +121,8 @@ object test2 extends App {
     def bouger(dir: Char): Unit = {
 
 
-      var posY: Int = chercheValeurDansLeTableau(1)(0)
-      var posX: Int = chercheValeurDansLeTableau(1)(1)
+      var posY: Int = chercheValeurDansLeTableau(teteSerpent)(0)
+      var posX: Int = chercheValeurDansLeTableau(teteSerpent)(1)
 
       suivreTete()
 
@@ -155,7 +153,7 @@ object test2 extends App {
     def mangerParTete(posLigne: Int, posColonne: Int): Unit = {
       var quoiMange: Int = grille(posLigne)(posColonne)
 
-      if (quoiMange == -1) {
+      if (quoiMange == proie) {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
         //println("Mangé")
@@ -170,7 +168,7 @@ object test2 extends App {
 
         grille(posLigne)(posColonne) = teteSerpent
 
-        tailleSerpent = (tailleSerpent / 2).toInt
+        tailleSerpent = tailleSerpent / 2
 
         if (tailleSerpent <= longueurInitSerpent) {
           tailleSerpent = longueurInitSerpent
