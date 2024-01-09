@@ -123,8 +123,8 @@ object test2 extends App {
     def bouger(dir: Char): Unit = {
 
 
-      var posY: Int = chercheValeurDansLeTableau(1)(0)
-      var posX: Int = chercheValeurDansLeTableau(1)(1)
+      var posY: Int = chercheValeurDansLeTableau(teteSerpent)(0)
+      var posX: Int = chercheValeurDansLeTableau(teteSerpent)(1)
 
       suivreTete()
 
@@ -155,7 +155,7 @@ object test2 extends App {
     def mangerParTete(posLigne: Int, posColonne: Int): Unit = {
       var quoiMange: Int = grille(posLigne)(posColonne)
 
-      if (quoiMange == -1) {
+      if (quoiMange == proie) {
         tailleSerpent += 1
         grille(posLigne)(posColonne) = teteSerpent
         //println("Mangé")
@@ -170,7 +170,7 @@ object test2 extends App {
 
         grille(posLigne)(posColonne) = teteSerpent
 
-        tailleSerpent = (tailleSerpent / 2).toInt
+        tailleSerpent = (tailleSerpent / 2)
 
         if (tailleSerpent <= longueurInitSerpent) {
           tailleSerpent = longueurInitSerpent
@@ -261,8 +261,6 @@ object test2 extends App {
 
       var toucheSauv: Char = 'G'
 
-      var sensibilite: Int = 99999999
-
       var nbObstaclesMortels: Int = 0
 
       var compteur: Int = 0
@@ -271,7 +269,75 @@ object test2 extends App {
 
       var start: Boolean = true
 
+      var startReponse: String = "Marche"
+
       val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
+
+      // Pour dessiner
+      def dessinerCorpsSerpent(i: Int, j: Int): Unit = {
+        val b = new GraphicsBitmap("/res/Corps.jpg")
+
+        grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
+      }
+
+      def desssinerProie(i: Int, j: Int): Unit = {
+        val c = new GraphicsBitmap("/res/pommes.jpg")
+
+        grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
+      }
+
+      def dessinerObstacleMortel(i: Int, j: Int) {
+        val d = new GraphicsBitmap("/res/bombes.jpeg")
+
+        grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
+      }
+
+
+      def dessinerReducteurDeSerpent(i: Int, j: Int): Unit = {
+        val e = new GraphicsBitmap("/res/cadeau.jpg")
+
+        grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
+      }
+
+      def dessinerTeteSerpent(i: Int, j: Int, dirTeteBloque: Boolean = false): Unit = {
+        val a = new GraphicsBitmap("/res/snake1.jpg")
+        var toucheSauvTete = toucheSauv
+
+
+
+
+
+        // blocage de la tête pour le menu Start
+        if (dirTeteBloque == true) {
+          toucheSauvTete = 'G'
+        }
+
+        var angle: Double = 0
+        toucheSauvTete match {
+
+          case 'G' => angle = 0
+          case 'B' => angle = math.Pi / 2 * 3
+          case 'D' => angle = math.Pi
+          case 'H' => angle = math.Pi / 2
+
+        }
+
+        grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
+      }
+
+      def affichageScore(couleur: String = "BLACK"): Unit = {
+        var couleurAppli: Color = Color.BLACK
+        if (couleur != "BLACK") {
+          couleurAppli = Color.WHITE
+        }
+        grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 110, s"Press 's' . Stop/Start :", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 125, s"${startReponse}", couleurAppli, 12)
+      }
 
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
@@ -309,80 +375,71 @@ object test2 extends App {
           if (e.getKeyChar == 's') {
             if (start == true) {
               start = false
+              startReponse = "En pause"
             }
             else {
               start = true
+              startReponse = "En marche !"
+            }
+          }
+        }
+      })
+
+      //--------------------------------------------------------------------------------------------------------
+      // Pour Dessiner le jeu
+      def dessiner(): Unit = {
+        // Pour eviter le scintillement
+        grilleJeu.frontBuffer.synchronized {
+
+          grilleJeu.clear()
+          //draw our object
+
+          // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
+          grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
+
+          affichageScore()
+
+          // Pour dessiner le jeu
+          for (i <- grille.indices) {
+            for (j <- grille(i).indices) {
+
+              var valeur: Int = grille(i)(j)
+
+              if (valeur == teteSerpent) {
+
+
+                dessinerTeteSerpent(i, j)
+              }
+              else if (valeur >= 2) {
+
+                dessinerCorpsSerpent(i, j)
+              }
+              else if (valeur == proie) {
+
+                desssinerProie(i, j)
+              }
+              else if (valeur == obstacleMortel) {
+
+                dessinerObstacleMortel(i, j)
+              }
+              else if (valeur == reducteurDeSerpent) {
+
+                dessinerReducteurDeSerpent(i, j)
+              }
+
+
             }
           }
 
         }
-      })
+      }
 
       while (jeu == "Marche") {
+
         if (start == true) {
-          println(start)
-          // Pour eviter le scintillement
-          grilleJeu.frontBuffer.synchronized {
 
-            grilleJeu.clear()
-            //draw our object
-
-            // DELIMITATION DE LA ZONE DE JEUX. PARTI A DROITE POUR AFFICHER SCORE, NIVEAU ET ...
-            grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
-            grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", Color.ORANGE, 12)
-            grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", Color.BLACK, 12)
-            grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", Color.DARK_GRAY, 12)
-            grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", Color.RED, 12)
-            grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", Color.BLUE, 12)
-
-            // Pour dessiner le jeu
-            for (i <- grille.indices) {
-              for (j <- grille(i).indices) {
-
-                var valeur: Int = grille(i)(j)
-
-                if (valeur == teteSerpent) {
-                  val a = new GraphicsBitmap("/res/snake1.jpg")
-                  var angle: Double = 0
-                  toucheSauv match {
-
-                    case 'G' => angle = 0
-                    case 'B' => angle = math.Pi / 2 * 3
-                    case 'D' => angle = math.Pi
-                    case 'H' => angle = math.Pi / 2
-
-                  }
-
-                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
-
-
-                  //grilleJeu.drawFilledCircle(j * pixelsSize, i * pixelsSize, pixelsSize)
-                }
-                else if (valeur >= 2) {
-                  val b = new GraphicsBitmap("/res/Corps.jpg")
-
-                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
-                }
-                else if (valeur == proie) {
-                  val c = new GraphicsBitmap("/res/pommes.jpg")
-
-                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
-                }
-                else if (valeur == obstacleMortel) {
-                  val d = new GraphicsBitmap("/res/bombes.jpeg")
-
-                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
-                }
-                else if (valeur == reducteurDeSerpent) {
-                  val e = new GraphicsBitmap("/res/cadeau.jpg")
-
-                  grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
-                }
-
-
-              }
-            }
-          }
+          // Afficher le jeu
+          dessiner()
           //affichageGrille()
 
 
@@ -413,7 +470,67 @@ object test2 extends App {
           //refresh the screen at XXX FPS
           grilleJeu.syncGameLogic(4)
         }
-        println(start)
+        //Pour que le clavier puisse fonctionner
+        else {
+          Thread.sleep(10)
+
+
+          var sauvegardeDirectionDeLAtete = toucheSauv
+
+          // Menu Pause
+          var compteurMouv: Int = maxColonnes - 1
+
+          while (start == false) {
+
+            grilleJeu.frontBuffer.synchronized {
+              grilleJeu.clear()
+              // Dessiner le jeu pour le voir figer
+              dessiner()
+
+              // Ajout du Menu Pause
+              grilleJeu.drawFillRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize / 2)
+              grilleJeu.drawString(pixelsSize + 5, 80, s"${startReponse}", Color.white, 64)
+              affichageScore("WHITE")
+              // Dessiner un serpent pour la décoration dans le Menu Pause
+
+
+              toucheSauv = 'G'
+
+              if (compteurMouv == -10) {
+                compteurMouv = maxColonnes + 10
+              }
+              dessinerTeteSerpent(14, compteurMouv, false)
+              var corps1: Int = compteurMouv + 1
+              var corps2: Int = corps1 + 1
+              var corps3: Int = corps2 + 1
+              var corps4: Int = corps3 + 1
+              var corps5: Int = corps4 + 1
+              var corps6: Int = corps5 + 1
+
+              def resetSuivre(corpsPos: Int): Int = {
+                if (corpsPos == -10) {
+                  corpsPos == maxColonnes - 1
+                }
+                return corpsPos
+              }
+
+              dessinerCorpsSerpent(14, resetSuivre(corps1))
+              dessinerCorpsSerpent(14, resetSuivre(corps2))
+              dessinerCorpsSerpent(14, resetSuivre(corps3))
+              dessinerCorpsSerpent(14, resetSuivre(corps4))
+              dessinerCorpsSerpent(14, resetSuivre(corps5))
+              dessinerCorpsSerpent(14, resetSuivre(corps6))
+
+              compteurMouv -= 1
+
+
+            }
+            grilleJeu.syncGameLogic(4)
+          }
+
+
+          toucheSauv = sauvegardeDirectionDeLAtete
+        }
       }
 
       println("Tu es nul !!!!!")
