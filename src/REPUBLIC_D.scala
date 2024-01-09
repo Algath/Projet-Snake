@@ -269,6 +269,8 @@ object test2 extends App {
 
       var compteursauv: Int = 0
 
+      var start : Boolean = true
+
       val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
 
 
@@ -277,7 +279,7 @@ object test2 extends App {
         override def keyPressed(e: KeyEvent): Unit = {
 
 
-          if (e.getKeyChar == 'W') {
+          if (e.getKeyChar == 'w') {
             println("Wahoooooo tu es trop fort !")
           }
           if (e.getKeyCode == KeyEvent.VK_RIGHT) {
@@ -304,13 +306,20 @@ object test2 extends App {
 
             }
           }
-
+          if (e.getKeyChar == 's') {
+            if (start == true){
+              start = false
+            }
+            else {
+              start = true
+            }
+          }
 
         }
       })
 
       while (jeu == "Marche") {
-
+        if(start == true) {
 
         // Pour eviter le scintillement
         grilleJeu.frontBuffer.synchronized {
@@ -403,7 +412,7 @@ object test2 extends App {
 
         //refresh the screen at XXX FPS
         grilleJeu.syncGameLogic(4)
-
+      }
       }
       println("Tu es nul !!!!!")
     }
@@ -426,7 +435,7 @@ object test2 extends App {
     }
   }
 
-  var x: Snake = new Snake(15, 30)
+  var x: Snake = new Snake(30, 20)
 
   x.affichageDuJeu()
 
