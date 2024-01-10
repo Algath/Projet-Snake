@@ -18,12 +18,15 @@ object musique extends App {
     def play(): Unit = {
       // Open stream and play
       try {
-        if (!audioClip.isOpen) audioClip.open()
-        audioClip.stop()
-        audioClip.setFramePosition(0)
-        audioClip.start()
-        audioClip.loop(-1)
-        Thread.sleep(2000)
+        new Thread {
+          override def run(): Unit = {
+            if (!audioClip.isOpen) audioClip.open()
+            audioClip.stop()
+            audioClip.setFramePosition(0)
+            audioClip.start()
+            audioClip.loop(-1)
+          }
+        }.start()
       } catch {
         case e: Exception =>
           e.printStackTrace()

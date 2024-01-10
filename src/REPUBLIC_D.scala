@@ -391,6 +391,7 @@ object test2 extends App {
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
 
         override def keyPressed(e: KeyEvent): Unit = {
+          snake_sound.playSnakeSound()
 
 
           if (e.getKeyChar == 'w') {
@@ -399,25 +400,21 @@ object test2 extends App {
           if (e.getKeyCode == KeyEvent.VK_RIGHT) {
             if (orientationInitTete != 'E') {
               toucheSauv = 'D'
-              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_LEFT) {
             if (orientationInitTete != 'O') {
               toucheSauv = 'G'
-              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_UP) {
             if (orientationInitTete != 'S') {
               toucheSauv = 'H'
-              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_DOWN) {
             if (orientationInitTete != 'N') {
               toucheSauv = 'B'
-              snake_sound.play()
             }
           }
           if (e.getKeyChar == 's') {
@@ -650,16 +647,28 @@ object test2 extends App {
     def play(): Unit = {
       // Open stream and play
       try {
-        if (!audioClip.isOpen) audioClip.open()
-        audioClip.stop()
-        audioClip.setFramePosition(0)
-        audioClip.start()
-        audioClip.loop(-1)
-        Thread.sleep(time)
+        new Thread {
+          override def run(): Unit = {
+            if (!audioClip.isOpen) audioClip.open()
+            audioClip.stop()
+            audioClip.setFramePosition(0)
+            audioClip.start()
+            audioClip.loop(-1)
+          }
+        }.start()
       } catch {
         case e: Exception =>
           e.printStackTrace()
           println("hello")
+      }
+    }
+
+    def playSnakeSound(): Unit = {
+      if (!audioClip.isRunning) {
+        audioClip.stop()
+        audioClip.setFramePosition(0)
+        audioClip.flush()
+        audioClip.start()
       }
     }
   }
