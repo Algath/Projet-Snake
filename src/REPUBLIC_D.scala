@@ -36,7 +36,8 @@ object test2 extends App {
     var nombresDeReducteurs: Int = 0
 
     // Musique
-    var music: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.wav")
+    var background_music: AudioPlayer = new AudioPlayer("res/Density & Time - MAZE  NO COPYRIGHT 8-bit Music.wav", 30000)
+    var snake_sound: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.wav", 2000)
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -260,7 +261,7 @@ object test2 extends App {
     //Menus
 
     // Lancement de la musique
-    music.play()
+    background_music.play()
 
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
@@ -398,25 +399,25 @@ object test2 extends App {
           if (e.getKeyCode == KeyEvent.VK_RIGHT) {
             if (orientationInitTete != 'E') {
               toucheSauv = 'D'
-
+              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_LEFT) {
             if (orientationInitTete != 'O') {
               toucheSauv = 'G'
-
+              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_UP) {
             if (orientationInitTete != 'S') {
               toucheSauv = 'H'
-
+              snake_sound.play()
             }
           }
           if (e.getKeyCode == KeyEvent.VK_DOWN) {
             if (orientationInitTete != 'N') {
               toucheSauv = 'B'
-
+              snake_sound.play()
             }
           }
           if (e.getKeyChar == 's') {
@@ -632,7 +633,7 @@ object test2 extends App {
     }
   }
 
-  class AudioPlayer(path: String) {
+  class AudioPlayer(path: String, time: Int) {
     var audioClip: Clip = null
     try {
       // Create audio input URL
@@ -654,7 +655,7 @@ object test2 extends App {
         audioClip.setFramePosition(0)
         audioClip.start()
         audioClip.loop(-1)
-        Thread.sleep(2000)
+        Thread.sleep(time)
       } catch {
         case e: Exception =>
           e.printStackTrace()
