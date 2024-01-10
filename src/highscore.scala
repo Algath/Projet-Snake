@@ -13,12 +13,8 @@ object HighScore extends App {
       result
     }
 
-    def classement(old: Int, news: Int, HS: Array[Int]): Unit = {
-      var oldHighScore: Int = old
-      var newHighScore: Int = news
-
-      if (newHighScore > oldHighScore) HS(2) = newHighScore
-
+    def classement(HS: Array[Int]): Array[Int] = {
+      HS.sorted.reverse
     }
   }
 
@@ -27,10 +23,12 @@ object HighScore extends App {
   var memoryScore: Array[Int] = Array.ofDim(11)
 
   for (c <- 0 until memoryScore.length) {
-    memoryScore(c) = 3 + c
+    memoryScore(c) = (math.random()*10).toInt
+    println(memoryScore(c))
   }
 
-  pw.println(hs.generateHS(memoryScore))
+  var classé: Array[Int] = hs.classement(memoryScore)
+
+  pw.println(hs.generateHS(classé))
   pw.close()
 }
-
