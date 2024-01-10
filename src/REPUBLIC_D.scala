@@ -48,11 +48,15 @@ object test2 extends App {
     grille(positionLignesInit)(positionColonnesInit) = teteSerpent
 
     //pour générer la queue du serpent initiale sur la grille
-    for (i: Int <- 1 until longueurInitSerpent) {
-      var positionQueueInitSerpentN: Int = positionColonnesInit + i
+    def creerSerpent(): Unit = {
+      for (i: Int <- 1 until longueurInitSerpent) {
+        var positionQueueInitSerpentN: Int = positionColonnesInit + i
 
-      grille(positionLignesInit)(horsGrille(positionColonnesInit + i, maxColonnes)) = (i + 1)
+        grille(positionLignesInit)(horsGrille(positionColonnesInit + i, maxColonnes)) = (i + 1)
+      }
     }
+
+    creerSerpent()
 
     // générer les proies de manière aléatoire
 
@@ -236,7 +240,7 @@ object test2 extends App {
       }
     }
 
-    // Affichage de la grille, pour visu
+    // Affichage de la grille, pour visu (pour controler, avant d'avoir le rendu par fub graphic)
     def affichageGrille(): Unit = {
       var text: String = ""
       for (i <- grille.indices) {
@@ -260,6 +264,10 @@ object test2 extends App {
 
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
+
+      var jeuInit: Int = 1
+
+      var compilation: String = "Marche"
 
       val pixelsSize: Int = 20
 
@@ -308,12 +316,10 @@ object test2 extends App {
       }
 
       def dessinerTeteSerpent(i: Int, j: Int, dirTeteBloque: Boolean = false): Unit = {
+
         val a = new GraphicsBitmap("/res/snake1.jpg")
+
         var toucheSauvTete = toucheSauv
-
-
-
-
 
         // blocage de la tête pour le menu Start
         if (dirTeteBloque == true) {
@@ -345,8 +351,41 @@ object test2 extends App {
         grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", couleurAppli, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 110, s"Press 's' . Stop/Start :", couleurAppli, 12)
         grilleJeu.drawString(width * pixelsSize + 5, 125, s"${startReponse}", couleurAppli, 12)
+        grilleJeu.drawString(width * pixelsSize + 5, 140, s"Press 'e' . Exit ", couleurAppli, 12)
       }
 
+      def serpentDecoratif(compteur0: Int): Unit = {
+
+        var compteur: Int = compteur0
+
+        toucheSauv = 'G'
+        var positionXRandom: Int = 14
+
+
+        dessinerTeteSerpent(positionXRandom, compteur, false)
+        var corps1: Int = compteur + 1
+        var corps2: Int = corps1 + 1
+        var corps3: Int = corps2 + 1
+        var corps4: Int = corps3 + 1
+        var corps5: Int = corps4 + 1
+        var corps6: Int = corps5 + 1
+        var corps7: Int = corps6 + 1
+        var corps8: Int = corps7 + 1
+        var corps9: Int = corps8 + 1
+        var corps10: Int = corps9 + 1
+
+        dessinerCorpsSerpent(positionXRandom, (corps1))
+        dessinerCorpsSerpent(positionXRandom, (corps2))
+        dessinerCorpsSerpent(positionXRandom, (corps3))
+        dessinerCorpsSerpent(positionXRandom, (corps4))
+        dessinerCorpsSerpent(positionXRandom, (corps5))
+        dessinerCorpsSerpent(positionXRandom, (corps6))
+        dessinerCorpsSerpent(positionXRandom, (corps7))
+        dessinerCorpsSerpent(positionXRandom, (corps8))
+        dessinerCorpsSerpent(positionXRandom, (corps9))
+        dessinerCorpsSerpent(positionXRandom, (corps10))
+
+      }
 
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
 
@@ -381,15 +420,49 @@ object test2 extends App {
             }
           }
           if (e.getKeyChar == 's') {
-            if (start == true) {
-              start = false
-              startReponse = "En pause"
-            }
-            else {
-              start = true
-              startReponse = "En marche !"
+            if (jeu == "Marche") {
+              if (start == true) {
+                start = false
+                startReponse = "En pause"
+              }
+              else {
+                start = true
+                startReponse = "En marche !"
+              }
             }
           }
+
+          if (e.getKeyChar == 'e') {
+            if (jeu == "Fini") {
+              compilation = "Fin"
+              println(compilation)
+            }
+            else {
+              jeu = "Fini"
+              start = true
+            }
+          }
+          if (e.getKeyChar == 'p') {
+            if (jeu != "Marche") {
+              jeu = "Marche"
+
+              // refaire la grille pour recommencer
+              for (b: Int <- reducteurDeSerpent until proie) {
+                suppression(b, true)
+              }
+              for (c: Int <- longueurInitSerpent + 1 to tailleSerpent) {
+                suppression(c, true)
+
+              }
+              tailleSerpent = longueurInitSerpent
+              // initialiser les valeurs
+              compteur = 0
+              nombresDeProiesMangees = 0
+
+
+            }
+          }
+
         }
       })
 
@@ -442,112 +515,105 @@ object test2 extends App {
         }
       }
 
-      while (jeu == "Marche") {
+      var compteurMenu: Int = maxColonnes + 10
 
-        if (start == true) {
+      while (compilation == "Marche" || jeuInit == 1) {
+        jeuInit = 0
+        while (jeu == "Marche") {
 
-          // Afficher le jeu
-          dessiner()
-          //affichageGrille()
+          if (start == true) {
 
-
-          //faire avancer automatiquement le serpent
-
-          bouger(toucheSauv)
-
-          compteur += 1
-
-          // Faire disparaitre le réducteur au bout de x temps
-          if (compteur % 30 == 0) {
-            suppression(reducteurDeSerpent, true)
-          }
-
-          // Regle pour faire apparaitre un obstacle mortel
-          if (compteur >= 100 && compteur % 40 == 0) {
-            creerObstacles(1)
-            nbObstaclesMortels += 1
-            compteursauv = compteur
-          }
-
-          //Regle pour faire apparaitre un reducteur de serpent
-          if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
-            creerReducteur(1)
-
-          }
-          // mémorisation du score
-          var memoryScore: Array[Int] = Array.ofDim(10)
-          //memoryScore() = nombresDeProiesMangees
-
-          //refresh the screen at XXX FPS
-          grilleJeu.syncGameLogic(4)
-        }
-        //Pour que le clavier puisse fonctionner
-        else {
-          Thread.sleep(10)
+            // Afficher le jeu
+            dessiner()
+            //affichageGrille()
 
 
-          var sauvegardeDirectionDeLAtete = toucheSauv
+            //faire avancer automatiquement le serpent
 
-          // Menu Pause
-          var compteurMouv: Int = maxColonnes - 1
+            bouger(toucheSauv)
 
-          while (start == false) {
+            compteur += 1
 
-            grilleJeu.frontBuffer.synchronized {
-              grilleJeu.clear()
-              // Dessiner le jeu pour le voir figer
-              dessiner()
+            // Faire disparaitre le réducteur au bout de x temps
+            if (compteur % 30 == 0) {
+              suppression(reducteurDeSerpent, true)
+            }
 
-              // Ajout du Menu Pause
-              grilleJeu.drawFillRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize / 2)
-              grilleJeu.drawString(pixelsSize + 5, 80, s"${startReponse}", Color.white, 64)
-              affichageScore("WHITE")
-              // Dessiner un serpent pour la décoration dans le Menu Pause
+            // Regle pour faire apparaitre un obstacle mortel
+            if (compteur >= 100 && compteur % 40 == 0) {
+              creerObstacles(1)
+              nbObstaclesMortels += 1
+              compteursauv = compteur
+            }
 
-
-              toucheSauv = 'G'
-
-              if (compteurMouv == -10) {
-                compteurMouv = maxColonnes + 10
-              }
-              dessinerTeteSerpent(14, compteurMouv, false)
-              var corps1: Int = compteurMouv + 1
-              var corps2: Int = corps1 + 1
-              var corps3: Int = corps2 + 1
-              var corps4: Int = corps3 + 1
-              var corps5: Int = corps4 + 1
-              var corps6: Int = corps5 + 1
-
-              def resetSuivre(corpsPos: Int): Int = {
-                if (corpsPos == -10) {
-                  corpsPos == maxColonnes - 1
-                }
-                return corpsPos
-              }
-
-              dessinerCorpsSerpent(14, resetSuivre(corps1))
-              dessinerCorpsSerpent(14, resetSuivre(corps2))
-              dessinerCorpsSerpent(14, resetSuivre(corps3))
-              dessinerCorpsSerpent(14, resetSuivre(corps4))
-              dessinerCorpsSerpent(14, resetSuivre(corps5))
-              dessinerCorpsSerpent(14, resetSuivre(corps6))
-
-              compteurMouv -= 1
-
+            //Regle pour faire apparaitre un reducteur de serpent
+            if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
+              creerReducteur(1)
 
             }
+            // mémorisation du score
+            var memoryScore: Array[Int] = Array.ofDim(10)
+            //memoryScore() = nombresDeProiesMangees
+
+            //refresh the screen at XXX FPS
             grilleJeu.syncGameLogic(4)
           }
+          //Pour que le clavier puisse fonctionner
+          else {
+            Thread.sleep(10)
 
 
-          toucheSauv = sauvegardeDirectionDeLAtete
+            var sauvegardeDirectionDeLAtete = toucheSauv
+
+            // Menu Pause
+
+            while (start == false && jeu == "Marche") {
+
+
+              // pour eviter le scintillement
+              grilleJeu.frontBuffer.synchronized {
+
+                // Ajout du Menu Pause
+                grilleJeu.drawFillRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize / 2)
+                grilleJeu.drawString(pixelsSize + 5, 80, s"${startReponse}", Color.white, 64)
+
+                affichageScore("WHITE")
+                // Dessiner un serpent pour la décoration dans le Menu Pause
+
+              }
+
+            }
+
+
+            toucheSauv = sauvegardeDirectionDeLAtete
+          }
         }
-      }
+        grilleJeu.clear()
 
-      println("Tu es nul !!!!!")
+        // Apparition du Menu
+        grilleJeu.frontBuffer.synchronized {
+
+          grilleJeu.drawRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
+          grilleJeu.drawString(pixelsSize + 5, 80, s"Menu", Color.black, 64)
+
+
+          var decallageYSerpentDeco: Int = 0
+
+          if (compteurMenu == -10) {
+            compteurMenu = maxColonnes + 10
+
+          }
+          grilleJeu.drawString(compteurMenu * 10, 120, s"Press 'p' : Nouvelle partie", Color.RED, 32)
+          serpentDecoratif(compteurMenu)
+          compteurMenu -= 1
+        }
+        grilleJeu.syncGameLogic(4)
+      }
+      grilleJeu.clear()
+
+      grilleJeu.drawString(pixelsSize + 5, 80, s"Fermer la fenêtre", Color.black, 64)
 
     }
-
 
     // fonction pour chercher une valeur dans le tableau
     def chercheValeurDansLeTableau(valCherch: Int): Array[Int] = {
@@ -601,7 +667,6 @@ object test2 extends App {
 
   x.affichageDuJeu()
 
-
   /*
     x.affichageGrille()
     x.bouger('B')
@@ -638,5 +703,6 @@ object test2 extends App {
     println("H")
     x.affichageGrille()
   */
+
 
 }
