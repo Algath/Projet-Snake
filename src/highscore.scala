@@ -16,6 +16,8 @@ object HighScore extends App {
     def classement(HS: Array[Int]): Array[Int] = {
       HS.sorted.reverse
     }
+
+    //TODO: lecture du fichier depuis le jeu, apparition du meilleur score dans la fenêtre de jeu, ajout username, google docs?
   }
 
   var hs: HighScore = new HighScore
