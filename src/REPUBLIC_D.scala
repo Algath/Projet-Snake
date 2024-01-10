@@ -1,11 +1,11 @@
 
 import hevs.graphics.FunGraphics
-import hevs.graphics.samples.TestTurtleGraphics.t.drawBackground
 import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
-import java.util.Scanner
+import javax.sound.sampled.{AudioSystem, Clip}
+
 
 object test2 extends App {
 
@@ -34,6 +34,9 @@ object test2 extends App {
 
     var nombresDeProiesMangees: Int = 0
     var nombresDeReducteurs: Int = 0
+
+    // Musique
+    var music: AudioPlayer = new AudioPlayer("res/bruitage_couleuvre.wav")
 
     // position d'apparition de la tête du Serpent (Aléatoire)
 
@@ -249,6 +252,11 @@ object test2 extends App {
       }
       println(text)
     }
+
+    //Menus
+
+    // Lancement de la musique
+    music.play()
 
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
@@ -466,6 +474,9 @@ object test2 extends App {
             creerReducteur(1)
 
           }
+          // mémorisation du score
+          var memoryScore: Array[Int] = Array.ofDim(10)
+          //memoryScore() = nombresDeProiesMangees
 
           //refresh the screen at XXX FPS
           grilleJeu.syncGameLogic(4)
@@ -552,6 +563,37 @@ object test2 extends App {
         }
       }
       return resultpos
+    }
+  }
+
+  class AudioPlayer(path: String) {
+    var audioClip: Clip = null
+    try {
+      // Create audio input URL
+      val url = this.getClass.getClassLoader.getResource(path)
+      val audioStream = AudioSystem.getAudioInputStream(url)
+      // Obtain clip
+      audioClip = AudioSystem.getClip.asInstanceOf[Clip]
+      audioClip.open(audioStream)
+    } catch {
+      case e: Exception =>
+        println(s"File type not supported: ${e.getMessage}")
+    }
+
+    def play(): Unit = {
+      // Open stream and play
+      try {
+        if (!audioClip.isOpen) audioClip.open()
+        audioClip.stop()
+        audioClip.setFramePosition(0)
+        audioClip.start()
+        audioClip.loop(-1)
+        Thread.sleep(2000)
+      } catch {
+        case e: Exception =>
+          e.printStackTrace()
+          println("hello")
+      }
     }
   }
 
