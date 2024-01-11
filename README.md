@@ -1,3 +1,6 @@
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/dcd03acf-bcd5-4371-a06c-2a14385bc349)
+
 Snake .
 
 // Lancement du Jeu : 
