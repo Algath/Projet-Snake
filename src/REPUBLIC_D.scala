@@ -4,7 +4,7 @@ import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import java.awt.event.{KeyAdapter, KeyEvent}
-import javax.sound.sampled.{AudioSystem, Clip}
+import javax.sound.sampled.{AudioSystem, Clip, FloatControl}
 
 
 object test2 extends App {
@@ -261,7 +261,7 @@ object test2 extends App {
     //Menus
 
     // Lancement de la musique
-    background_music.play()
+    background_music.play(0.06f)
 
     // Affichage du Jeu
     def affichageDuJeu(): Unit = {
@@ -391,7 +391,7 @@ object test2 extends App {
       grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
 
         override def keyPressed(e: KeyEvent): Unit = {
-          snake_sound.playSnakeSound()
+          snake_sound.playSnakeSound(0.2f)
 
 
           if (e.getKeyChar == 'w') {
@@ -644,16 +644,22 @@ object test2 extends App {
         println(s"File type not supported: ${e.getMessage}")
     }
 
-    def play(): Unit = {
+    def play(vol: Float): Unit = {
       // Open stream and play
       try {
         new Thread {
           override def run(): Unit = {
             if (!audioClip.isOpen) audioClip.open()
+            val gainControl: FloatControl = audioClip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl];
+            val volume = audioClip.getLevel
+
             audioClip.stop()
             audioClip.setFramePosition(0)
+            print(volume)
+            gainControl.setValue(volume/vol)
             audioClip.start()
             audioClip.loop(-1)
+            Thread.sleep(time)
           }
         }.start()
       } catch {
@@ -663,12 +669,18 @@ object test2 extends App {
       }
     }
 
-    def playSnakeSound(): Unit = {
+    def playSnakeSound(vol: Float): Unit = {
       if (!audioClip.isRunning) {
+        val gainControl: FloatControl = audioClip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl]
+        val volume = audioClip.getLevel
+
         audioClip.stop()
         audioClip.setFramePosition(0)
+        print(volume)
+        gainControl.setValue(volume/vol)
         audioClip.flush()
         audioClip.start()
+        Thread.sleep(time)
       }
     }
   }
@@ -676,43 +688,4 @@ object test2 extends App {
   var x: Snake = new Snake(30, 20)
 
   x.affichageDuJeu()
-
-  /*
-    x.affichageGrille()
-    x.bouger('B')
-    println("B")
-    x.affichageGrille()
-    x.bouger('B')
-    println("B")
-    x.affichageGrille()
-    x.bouger('G')
-    println("G")
-    x.affichageGrille()
-    x.bouger('G')
-    println("G")
-    x.affichageGrille()
-    x.bouger('B')
-    println("B")
-    x.affichageGrille()
-    x.bouger('B')
-    println("B")
-    x.affichageGrille()
-    x.bouger('D')
-    println("D")
-    x.affichageGrille()
-    x.bouger('D')
-    println("D")
-    x.affichageGrille()
-    x.bouger('H')
-    println("H")
-    x.affichageGrille()
-    x.bouger('H')
-    println("H")
-    x.affichageGrille()
-    x.bouger('H')
-    println("H")
-    x.affichageGrille()
-  */
-
-
 }
