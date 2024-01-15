@@ -9,7 +9,9 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
   //------------------------------------------------------------------------------------
   // Création du tableau de jeux :
-  var grille: Array[Array[Int]] = Array.fill(maxLignes, maxColonnes) {0}
+  var grille: Array[Array[Int]] = Array.fill(maxLignes, maxColonnes) {
+    0
+  }
   // définition des objets sur la grille (valeurs numériques)
   var jeu: String = "Marche"
   val teteSerpent: Int = 1
@@ -31,6 +33,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   var orientationInitTete: Char = 'E'
 
   grille(positionLignesInit)(positionColonnesInit) = teteSerpent
+
   //pour générer la queue du serpent initiale sur la grille
   def creerSerpent(): Unit = {
     for (i: Int <- 1 until longueurInitSerpent) {
@@ -163,6 +166,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       grille(posLigne)(posColonne) = teteSerpent
     }
   }
+
   // faire suivre la queue du Serpent
   def suivreTete(): Unit = {
     var valCase: Int = 0
@@ -178,6 +182,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       }
     }
   }
+
   // gestion des zones hors grille
   def horsGrille(pos: Int, maxVal: Int): Int = {
     // Fonction : Corrige les positions hors grille
@@ -193,6 +198,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       pos
     }
   }
+
   // Code ayant servi au débugage au début du projet (affichage sur console)
   /* def affichageGrille(): Unit = {
     var text: String = ""
@@ -228,27 +234,32 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     // Variable disant si le jeu est en cours ou non
     var start: Boolean = true
     var startReponse: String = "Marche"
+
     // Apparence des éléments s'affichant dans le jeu
     def dessinerCorpsSerpent(i: Int, j: Int): Unit = {
       val b = new GraphicsBitmap("/res/Corps.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
     }
+
     def desssinerProie(i: Int, j: Int): Unit = {
       val c = new GraphicsBitmap("/res/pommes.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
     }
+
     def dessinerObstacleMortel(i: Int, j: Int): Unit = {
       val d = new GraphicsBitmap("/res/bombes.jpeg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
     }
+
     def dessinerReducteurDeSerpent(i: Int, j: Int): Unit = {
       val e = new GraphicsBitmap("/res/cadeau.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
     }
+
     def dessinerTeteSerpent(i: Int, j: Int, dirTeteBloque: Boolean = false): Unit = {
       val a = new GraphicsBitmap("/res/snake1.jpg")
       var toucheSauvTete = toucheSauv
@@ -268,6 +279,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       }
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
     }
+
     def affichageScore(couleur: String = "BLACK"): Unit = {
       var couleurAppli: Color = Color.BLACK
       if (couleur != "BLACK") {
@@ -282,6 +294,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       grilleJeu.drawString(width * pixelsSize + 5, 125, s"$startReponse", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 140, s"Press 'e' . Exit ", couleurAppli, 12)
     }
+
     // Affichage du serpent sur le menu du jeu
     def serpentDecoratif(compteur0: Int): Unit = {
       val compteur: Int = compteur0
@@ -311,6 +324,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       dessinerCorpsSerpent(positionXRandom, corps9)
       dessinerCorpsSerpent(positionXRandom, corps10)
     }
+
     grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
       override def keyPressed(e: KeyEvent): Unit = {
         snake_sound.playSnakeSound(0.2f)
@@ -377,6 +391,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
       }
     })
+
     // Affichage du jeu
     def dessiner(): Unit = {
       // Pour eviter le scintillement
@@ -410,6 +425,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         }
       }
     }
+
     // Variable servant dans le déplacement du serpent décoratif + "press 'p'" dans le menu
     var compteurMenu: Int = maxColonnes + 10
     // Gestion du menu général + lancement automatique du jeu
@@ -475,6 +491,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     grilleJeu.clear()
     grilleJeu.drawString(pixelsSize + 5, 80, s"Fermer la fenêtre", Color.black, 64)
   }
+
   // Sert à trouver les valeurs correspondant aux différents éléments du jeu
   def chercheValeurDansLeTableau(valCherch: Int): Array[Int] = {
     val resultpos: Array[Int] = new Array(2)

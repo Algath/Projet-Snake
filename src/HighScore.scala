@@ -23,9 +23,9 @@ object HighScore extends App {
     def lectureHS(fileName: String): Array[String] = { //TODO debugage à faire
       var ranting: Array[String] = scala.io.Source.fromFile(fileName).getLines().toArray
       try {
-          for (i <- ranting.indices) {
-            println(ranting(i))
-          }
+        for (i <- ranting.indices) {
+          println(ranting(i))
+        }
         ranting
       } catch {
         case e: FileNotFoundException =>
