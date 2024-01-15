@@ -5,12 +5,20 @@ Snake .
 
 // Lancement du Jeu : 
 
-Lancer IntelliJ IDEA (Compilateur) ![image](https://github.com/Algath/Projet-Snake/assets/153815619/3b94293b-d22c-416f-8d83-56ca08b22eae)
+Lancer IntelliJ IDEA (Compilateur) 
 
-Cliquer dans le dossier src sur "REPUBLIC_D"![image](https://github.com/Algath/Projet-Snake/assets/153815619/4b43785b-aad6-470e-a31b-07c6aaf9d659)
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/3b94293b-d22c-416f-8d83-56ca08b22eae)
+
+
+Cliquer dans le dossier src sur "REPUBLIC_D"
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/4b43785b-aad6-470e-a31b-07c6aaf9d659)
 
 
 Cliquer faire le run (compiler "object test" extends App")
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/c408f00a-8bc3-4e73-8c87-23eefe74a8e4)
+
 
 La partie sera lancer directement
 
@@ -38,34 +46,44 @@ Exemple : si le serpent va vers la droite, appuyer sur la flêche GAUCHE n'aura 
 
 Autres touches
 
-Touche 'w' : Affiche "Wahoooooo tu es trop fort !", dans la console du compilateur
-
 En pleine partie ou depuis le "Menu Pause"
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/acebf795-09ad-448a-8b44-487c03b74f12)
+
 Touche 's' : "stop/start" : Permet de mettre le jeu en pause (on est dans le "menu pause") et si on appuie de nouveau sur la touche permet de sortir de la pause.
 Touche 'e' : "Exit" : Permet d'aller au "Menu Principal" (Pour relancer une nouvelle partie).
 
 Depuis le "Menu Principale"
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/e7c4d188-4dda-45aa-ab5a-3e2f99ece663)
+
+
 Touche 'e' : Arrête le Jeu (disparition du Menu) et invitation à fermer la fenêtre de Jeu.
-Touche 'p' : Permet de relancer une nouvelle partie. 
 
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/4153defd-ef76-4e0d-9fdb-d186e2538d14)
 
-_____________________________________________________________________________________________________________________________________________________________________________
+Touche 'p' : Permet de relancer une nouvelle partie.
+Touche 'p' : Permet de relancer une nouvelle partie.
+
 
 // Règle du jeu :
 
 Objectif : 
-- Manger les Pommes (contribue au Score de la partie) ;
-- Eviter les Bombes (si une est mangée, alors la partie est perdue) ;
-- Manger les cadeaux, pour réduire la taille du serpent par 2 ( mais la taille ne peut le réduire plus bas que 3) ;
-- Eviter que le serpent ce mange lui-même. 
+- <img src= 'src/res/pommes.jpg' width='25'> Manger les Pommes (contribue au Score de la partie) ;
+- <img src= 'src/res/bombes.jpeg' width='25'> Eviter les Bombes (si une est mangée, alors la partie est perdue) ;
+- <img src= 'src/res/cadeau.jpg' width='25'> Manger les cadeaux, pour réduire la taille du serpent par 2 ( mais la taille ne peut le réduire plus bas que 3) ;
+- Eviter que le serpent ce mange lui-même.
+  
+  ![image](https://github.com/Algath/Projet-Snake/assets/153815619/0f92be1c-af95-4d90-aa04-fe5e1680bf28)
+ 
 
 Apparition des objets :
 - Ils apparaîssent à des positions aléatoires sur la grille ;
-- Les Pommes sont toujours au nombre de 3, tout au long de la partie.
+- <img src= 'src/res/pommes.jpg' width='25'> Les Pommes sont toujours au nombre de 3, tout au long de la partie.
   Le fait d'en manger une, entraîne une nouvelle sur la grille ;
-- Les Bombes apparaîssent une par une, à partir de 100 périodes (appelé "temps" dans  le jeu), pour rester définitivement.
+- <img src= 'src/res/bombes.jpeg' width='25'> Les Bombes apparaîssent une par une, à partir de 100 périodes (appelé "temps" dans  le jeu), pour rester définitivement.
   Après une bombe est ajoutée, tous les multiples de 40 de période (ex : 120, 160, 200, 240, 280, 320, 360, 400...) ;
-- Un Cadeau apparaît à partir de 200 périodes, de manière aléatoire dans le temps.
+- <img src= 'src/res/cadeau.jpg' width='25'> Un Cadeau apparaît à partir de 200 périodes, de manière aléatoire dans le temps.
   Celui-ci reste durant une durée aléatoire, ne pouvant excéder une durée de 30 périodes.
   Il ne peut pas avoir qu'au plus que 1 cadeau sur la grille ;
 
