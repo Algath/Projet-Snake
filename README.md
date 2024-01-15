@@ -146,6 +146,7 @@ Elle possède 1 argument, le quoi qui nous permet de spécifier quelles valeurs 
 La fonction bouger gère le déplacement du serpent, plus précisément l'orientation de la tête du serpent dans les 4 points cardinaux.
 Une gestion hors grille est aussi faite via la fonction 'horsGrille'.
 La fonction 'suivreTête' est appelé dedans, tout comme la fonction 'mangerParTete' dans le dir match avec la fonction 'horsGrille'
+
 ![image_2024-01-15_225955792](https://github.com/Algath/Projet-Snake/assets/119356079/71b8db33-ccd6-49e6-9fa4-5738db9c4d0c)
 
 #### **def mangerParTete**
@@ -155,15 +156,18 @@ La fonction mangerParTete possède 2 arguments qui servent à gérer la position
 1. S'il est plus grande que 1 ou possède la même valeur que obstacleMortel, c'est un game over. (Le serpent se serait alors pris une bombe ou s'est mangé)
 1. S'il est de même valeur que reducteurDeSerpent, la taille du serpent est divisé par 2, avec une limite minimum de 3, la taille ne peut pas allée plus bas
 2. Sinon, la case ne cange pas
+3. 
 ![image_2024-01-15_230017047](https://github.com/Algath/Projet-Snake/assets/119356079/70126783-0d9d-475a-b91e-4ebfe4fe5650)
 
 #### **def suivreTête**
 La fonction permet au reste du corps de suivre fluidement les mouvements de la tête. Si la valeur de valCase est supérieur à 1 et inférieur à la taille du serpent, la case prend la valeur de la variable + 1.
 Si la valeur est la même que la taille maximum, la case prend la valeur de défaut (0).
+
 ![image_2024-01-15_230031930](https://github.com/Algath/Projet-Snake/assets/119356079/d28279b8-f53e-4e0e-8833-37878c6e248c)
 
 #### **def horsGrille**
 La fonction gère les zones grilles. Elle permet au serpent d'apparaître de l'autre côté de la fenêtre de jeu lorsqu'il sort.
+
 ![image_2024-01-15_230042374](https://github.com/Algath/Projet-Snake/assets/119356079/6c658c99-8849-4403-8448-6fb73e220317)
 
 #### **def affichageDuJeu**
@@ -183,6 +187,7 @@ La boucle while ont fin de la fonction résume toutes les étapes d'appels des f
 
 #### **def chercheValeurDansLeTableau**
 La fonction permet de retrouver une valeur précise dans la grille de jeu.
+
 ![image_2024-01-15_230319279](https://github.com/Algath/Projet-Snake/assets/119356079/6c0e3c58-ca1b-48eb-bbdb-79b0e65917d9)
 
 ### Secondaire: Class SnakeSoundPlayer
@@ -195,8 +200,11 @@ Un audioClip.loop(-1) permet de faire jouer en boucle la musique.
 
 Nous avons aussi une fonction playSnakeSound qui gère un bruit de couleuvre s'activant uniquement lorsque le serpent change de direction.
 La fonction playSnakeSound à la même configuration que play et le même fonctionnement.
+
 ![image_2024-01-15_230337728](https://github.com/Algath/Projet-Snake/assets/119356079/db651038-beef-459a-9b07-4a959c3bc668)
 
+### Idée d'ajout
+Nous avions pour idée de rajouter un tableau de High Score au jeu avec une variable affichant quel est la valeur la plus haute du moment, mais nous n'avions pas eu le temps de l'implémenté.
 ## Galerie
 ![image_2024-01-15_225404401](https://github.com/Algath/Projet-Snake/assets/119356079/1fcfff86-2b8c-429d-8722-c8f97d55d5a1)
 ![image_2024-01-15_225659320](https://github.com/Algath/Projet-Snake/assets/119356079/43b5123c-7939-4f47-9949-e71d20e435f5)
