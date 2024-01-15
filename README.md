@@ -19,7 +19,7 @@ Lancer IntelliJ IDEA (Compilateur)
 
 Cliquer dans le dossier src sur "REPUBLIC_SNAKE"
 
-![image](https://github.com/Algath/Projet-Snake/assets/153815619/4b43785b-aad6-470e-a31b-07c6aaf9d659)
+![image_2024-01-15_225248964](https://github.com/Algath/Projet-Snake/assets/119356079/9911e61c-3688-465b-8fe0-461fd3d1af13)
 
 
 Cliquer faire le run (compiler "object test" extends App")
@@ -119,27 +119,34 @@ Le deuxième bloc de variable concerne la gestion des objets en eux-mêmes. Que 
 Le troisième bloc initialise les variables gérant la musique. 'background_music' permet de lancer une musique de fond et 'snake_sound' fait entendre un bruit de couleuvre quand il est apprelé.
 
 Le dernier bloc sert à gérer la position de la tête du serpent sur la grille.
+![image_2024-01-15_225807859](https://github.com/Algath/Projet-Snake/assets/119356079/79f0efb5-bd58-4bfd-b0dc-5be973c59119)
+
 ####
 La ligne suivant ce bloc définit la position de la tête sur la grille au lancement du jeu (position aléatoire).
 
 #### **def creerSerpent**
 Fonction qui génère la queue et le reste du corps du serpent. La longueur de base est de '3', définit dans 'longueurInitSerpent'.
+![image_2024-01-15_225842896](https://github.com/Algath/Projet-Snake/assets/119356079/0e76daec-1776-43ea-ae96-2237163d401d)
 
 #### **def creerProies**
 La fonction creerProies demande un argument lui disant le nombre de proies à ajouter au jeu. Une variable countProieInit compte le nombre de proies ayant été initialisé dans le jeu.
 Si sa valeur est supérieur à celle du nombre de proies lui ayant été donné, plus aucune proie ne sera ajoutée. Leurs coordonnées sont complètement aléatoires.
+![image_2024-01-15_225906615](https://github.com/Algath/Projet-Snake/assets/119356079/e01670dd-8370-4e0a-bb6e-ad6c2ebb5979)
 
 #### **def creerObstacles + def creerReducteur**
 Ses deux fonctions possèdent la même logique que 'creerProies'. La seule différence se trouve dans creerReducteur où le nombre de réducteur est limité à 1 en jeu. 
+![image_2024-01-15_225931084](https://github.com/Algath/Projet-Snake/assets/119356079/8b1a5cc9-cc6e-4014-8830-53ebd7dbfe68)
 
 #### **def suppression**
 La fonction permet de 'supprimer' les éléments visible sur la grille.
 Elle possède 1 argument, le quoi qui nous permet de spécifier quelles valeurs nous voulons enlever (par rapports au valeurs définies au début de la class)
+![image_2024-01-15_225943084](https://github.com/Algath/Projet-Snake/assets/119356079/6919038c-275c-4877-8038-2395959efd24)
 
 #### **def bouger**
 La fonction bouger gère le déplacement du serpent, plus précisément l'orientation de la tête du serpent dans les 4 points cardinaux.
 Une gestion hors grille est aussi faite via la fonction 'horsGrille'.
 La fonction 'suivreTête' est appelé dedans, tout comme la fonction 'mangerParTete' dans le dir match avec la fonction 'horsGrille'
+![image_2024-01-15_225955792](https://github.com/Algath/Projet-Snake/assets/119356079/71b8db33-ccd6-49e6-9fa4-5738db9c4d0c)
 
 #### **def mangerParTete**
 La fonction mangerParTete possède 2 arguments qui servent à gérer la position de la tête du serpent dans la grille. Elle est appelé dans def bouger.
@@ -148,13 +155,16 @@ La fonction mangerParTete possède 2 arguments qui servent à gérer la position
 1. S'il est plus grande que 1 ou possède la même valeur que obstacleMortel, c'est un game over. (Le serpent se serait alors pris une bombe ou s'est mangé)
 1. S'il est de même valeur que reducteurDeSerpent, la taille du serpent est divisé par 2, avec une limite minimum de 3, la taille ne peut pas allée plus bas
 2. Sinon, la case ne cange pas
+![image_2024-01-15_230017047](https://github.com/Algath/Projet-Snake/assets/119356079/70126783-0d9d-475a-b91e-4ebfe4fe5650)
 
 #### **def suivreTête**
 La fonction permet au reste du corps de suivre fluidement les mouvements de la tête. Si la valeur de valCase est supérieur à 1 et inférieur à la taille du serpent, la case prend la valeur de la variable + 1.
 Si la valeur est la même que la taille maximum, la case prend la valeur de défaut (0).
+![image_2024-01-15_230031930](https://github.com/Algath/Projet-Snake/assets/119356079/d28279b8-f53e-4e0e-8833-37878c6e248c)
 
 #### **def horsGrille**
 La fonction gère les zones grilles. Elle permet au serpent d'apparaître de l'autre côté de la fenêtre de jeu lorsqu'il sort.
+![image_2024-01-15_230042374](https://github.com/Algath/Projet-Snake/assets/119356079/6c658c99-8849-4403-8448-6fb73e220317)
 
 #### **def affichageDuJeu**
 La fonction affichageDuJeu est la fonction utilisant FunGraphics pour afficher le jeu. L'apparence du serpent, des proies, des bombes et des cadeaux se font ici.
@@ -168,9 +178,12 @@ La fonction serpentDecoratif fait apparaître un serpent dans le menu du jeu.
 C'est dans la fonction dessiner que se trouve les conditions d'appels des fonctions gérant les images pour les différents éléments du jeu.
 
 La boucle while ont fin de la fonction résume toutes les étapes d'appels des fonctions définies précédemment.
+![image_2024-01-15_230111586](https://github.com/Algath/Projet-Snake/assets/119356079/20e0f1ec-ab6b-4de9-b812-faa2aaa4c8e2)
+![image_2024-01-15_230304189](https://github.com/Algath/Projet-Snake/assets/119356079/c8caa94d-021a-4879-a6f6-ea5a97ff92f9)
 
 #### **def chercheValeurDansLeTableau**
 La fonction permet de retrouver une valeur précise dans la grille de jeu.
+![image_2024-01-15_230319279](https://github.com/Algath/Projet-Snake/assets/119356079/6c0e3c58-ca1b-48eb-bbdb-79b0e65917d9)
 
 ### Secondaire: Class SnakeSoundPlayer
 La class SnakeSoundPlayer est une classe AudioSystem et Clip ayant pour rôle de générer et contrôler la musique/bruitage du jeu.
@@ -182,6 +195,14 @@ Un audioClip.loop(-1) permet de faire jouer en boucle la musique.
 
 Nous avons aussi une fonction playSnakeSound qui gère un bruit de couleuvre s'activant uniquement lorsque le serpent change de direction.
 La fonction playSnakeSound à la même configuration que play et le même fonctionnement.
+![image_2024-01-15_230337728](https://github.com/Algath/Projet-Snake/assets/119356079/db651038-beef-459a-9b07-4a959c3bc668)
+
+## Galerie
+![image_2024-01-15_225404401](https://github.com/Algath/Projet-Snake/assets/119356079/1fcfff86-2b8c-429d-8722-c8f97d55d5a1)
+![image_2024-01-15_225659320](https://github.com/Algath/Projet-Snake/assets/119356079/43b5123c-7939-4f47-9949-e71d20e435f5)
+![image_2024-01-15_225557599](https://github.com/Algath/Projet-Snake/assets/119356079/62d70f49-0d57-4a1d-86a6-82e5c6142b35)
+
+
  _____________________________________________________________________________________________________________________________________________________________________________
 
  ## Crédit :
