@@ -2,15 +2,15 @@ import java.io._
 
 object HighScore extends App {
   class HighScore() {
-    def generateHS(score: Array[Int], utilisateur: Array[String]): String = {
+    def generateHS(score: Array[Int]): String = {
       var file: String = "src/res/HighScore.txt"
       val pw = new PrintWriter(new FileOutputStream(file))
       var result: String = ""
 
       for (i: Int <- 1 until 11) {
-        result += s"$i. ${utilisateur(i-1)} ${score(i - 1)}\n"
+        result += s"$i. ${score(i - 1)}\n"
       }
-      pw.println(hs.generateHS(classé, userName))
+      pw.println(result)
       pw.close()
       result
     }
@@ -65,6 +65,6 @@ object HighScore extends App {
     userName(c) = hs.askName()
   }
   println(s"Actual High Score: ${classé(0)}")
-
+  hs.generateHS(classé)
   hs.lectureHS(file)
 }

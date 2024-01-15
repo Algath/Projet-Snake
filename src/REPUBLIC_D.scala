@@ -305,7 +305,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       if (couleur != "BLACK") {
         couleurAppli = Color.WHITE
       }
-      //grilleJeu.drawString(pixelSize + 5, 80, s"Actual High Score: ${classé(0)}", Color.red, 64)
       grilleJeu.drawString(width * pixelsSize + 5, 20, s"Score : ${nombresDeProiesMangees.toString}", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 35, s"Taille Serpent : ${tailleSerpent.toString}", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 50, s"Temps : ${compteur.toString}", couleurAppli, 12)
@@ -451,7 +450,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     var compteurMenu: Int = maxColonnes + 10
     //TODO
     while (compilation == "Marche" || jeuInit == 1) {
-      //TODO AskUser
       jeuInit = 0
       while (jeu == "Marche") {
         if (start == true) {
@@ -475,11 +473,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
           if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
             creerReducteur(1)
           }
-          /* TODO HighScore
-          // mémorisation du score
-          var memoryScore: Array[Int] = Array.ofDim(11)
-          */
-
           //refresh the screen at XXX FPS
           grilleJeu.syncGameLogic(4)
         }
@@ -495,7 +488,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
               // Ajout du Menu Pause
               grilleJeu.drawFillRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize / 2)
               grilleJeu.drawString(pixelsSize + 5, 80, s"${startReponse}", Color.white, 64)
-              //grilleJeu.drawString(pixelSize + 5, 80, s"Actual High Score: ${classé(0)}", Color.red, 64) TODO
               affichageScore("WHITE")
               // Dessiner un serpent pour la décoration dans le Menu Pause
             }
@@ -519,9 +511,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       }
       grilleJeu.syncGameLogic(4)
     }
-    //TODO memoryscore
-    // mémorisation du score
-    // var memoryScore: Array[Int] = Array.ofDim(11)
     grilleJeu.clear()
     grilleJeu.drawString(pixelsSize + 5, 80, s"Fermer la fenêtre", Color.black, 64)
   }
