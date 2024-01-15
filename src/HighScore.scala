@@ -2,11 +2,11 @@ import java.io._
 
 object HighScore extends App {
   class HighScore() {
-    def generateHS(score: Array[Int], utilisateur: String): String = {
+    def generateHS(score: Array[Int], utilisateur: Array[String]): String = {
       var result: String = ""
 
       for (i: Int <- 1 until 11) {
-        result += s"$i. $utilisateur ${score(i-1)}\n"
+        result += s"$i. ${utilisateur(i-1)} ${score(i - 1)}\n"
       }
 
       result
@@ -29,8 +29,6 @@ object HighScore extends App {
         println(line)
 
         inputReader.close()
-        /*val lines = scala.io.Source.fromFile(fileName).getLines.toList
-        lines.foreach(println)*/
       } catch {
         case e: FileNotFoundException =>
           println("File not found !")
@@ -40,7 +38,7 @@ object HighScore extends App {
       }
     }
 
-    def askName(): String ={
+    def askName(): String = {
       var nomUtilisateur: String = ""
 
       println(s"Entrez votre nom: ")
@@ -54,18 +52,22 @@ object HighScore extends App {
   var file: String = "src/res/HighScore.txt"
   val pw = new PrintWriter(new FileOutputStream(file))
   var memoryScore: Array[Int] = Array.ofDim(11)
-  var userName: String = ""
+  var userName: Array[String] = Array.ofDim(11)
+  var serpent: Snake = new Snake()
+
 
   // TODO adapté l'intégration des scores
   for (c <- memoryScore.indices) {
-    memoryScore(c) = (math.random()*10).toInt
+    memoryScore(c) = serpent.nombresDeProiesMangees
   }
 
   var classé: Array[Int] = hs.classement(memoryScore)
 
   println(s"Actual High Score: ${classé(0)}")
 
-  userName = hs.askName()
+  for (c <- userName.indices) {
+    userName(c) = hs.askName()
+  }
   pw.println(hs.generateHS(classé, userName))
   pw.close()
   hs.lectureHS(file)
