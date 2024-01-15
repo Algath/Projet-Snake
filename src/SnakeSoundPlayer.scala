@@ -1,6 +1,6 @@
 import javax.sound.sampled.{AudioSystem, Clip, FloatControl}
 
-class SnakeSoundPlayer(path: String, time: Int) {
+class SnakeSoundPlayer(path: String) {
   var audioClip: Clip = null
   try {
     // Create audio input URL
@@ -29,20 +29,24 @@ class SnakeSoundPlayer(path: String, time: Int) {
     }catch {
       case e: Exception =>
         e.printStackTrace()
-        println("hello")
     }
   }
 
   def playSnakeSound(vol: Float): Unit = {
-    if (!audioClip.isRunning) {
-      val gainControl: FloatControl = audioClip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl]
-      val volume = audioClip.getLevel
+    try {
+      if (!audioClip.isRunning) {
+        val gainControl: FloatControl = audioClip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl]
+        val volume = audioClip.getLevel
 
-      audioClip.stop()
-      audioClip.setFramePosition(0)
-      gainControl.setValue(volume / vol)
-      audioClip.flush()
-      audioClip.start()
+        audioClip.stop()
+        audioClip.setFramePosition(0)
+        gainControl.setValue(volume / vol)
+        audioClip.flush()
+        audioClip.start()
+      }
+    }catch {
+      case e: Exception =>
+        e.printStackTrace()
     }
   }
 }

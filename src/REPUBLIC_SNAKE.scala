@@ -25,8 +25,8 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   var nombresDeProiesMangees: Int = 0
   var nombresDeReducteurs: Int = 0
   // Musique
-  var background_music: SnakeSoundPlayer = new SnakeSoundPlayer("res/Density & Time - MAZE  NO COPYRIGHT 8-bit Music.wav", 30000)
-  var snake_sound: SnakeSoundPlayer = new SnakeSoundPlayer("res/bruitage_couleuvre.wav", 2000)
+  var background_music: SnakeSoundPlayer = new SnakeSoundPlayer("res/Density & Time - MAZE  NO COPYRIGHT 8-bit Music.wav")
+  var snake_sound: SnakeSoundPlayer = new SnakeSoundPlayer("res/bruitage_couleuvre.wav")
   // position d'apparition de la tête du Serpent (Aléatoire)
   var positionLignesInit: Int = (math.random() * (maxLignes - 1)).toInt
   var positionColonnesInit: Int = (math.random() * (maxColonnes - 1)).toInt
@@ -41,6 +41,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     }
   }
 
+  //Création des éléments principaux sur la grille du jeu
   creerSerpent()
   creerProies(nombresdeProiesInit)
   creerReducteur(1)
@@ -91,16 +92,15 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     nombresDeReducteurs = 1
   }
 
-  def suppression(Quoi: Int, ActiveDest: Boolean): Unit = {
-    if (ActiveDest) {
-      var valCase1: Int = 0
-      for (i <- grille.indices) {
-        for (j <- grille(i).indices) {
-          valCase1 = grille(i)(j)
-          if (valCase1 == Quoi) {
-            grille(i)(j) = 0
-            nombresDeReducteurs = 0
-          }
+  // permet de reset à 0 les valeurs voulues
+  def suppression(Quoi: Int): Unit = {
+    var valCase1: Int = 0
+    for (i <- grille.indices) {
+      for (j <- grille(i).indices) {
+        valCase1 = grille(i)(j)
+        if (valCase1 == Quoi) {
+          grille(i)(j) = 0
+          nombresDeReducteurs = 0
         }
       }
     }
@@ -220,8 +220,8 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     // Variable de lancement du jeu
     var jeuInit: Int = 1
     var compilation: String = "Marche"
-    val pixelsSize: Int = 20
     // Définition des dimensions du plateau de jeu
+    val pixelsSize: Int = 20
     val height: Int = maxLignes
     val width: Int = maxColonnes
     val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
@@ -377,10 +377,10 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
             // Reload de la grille pour la nouvelle partie
             for (b: Int <- reducteurDeSerpent until proie) {
-              suppression(b, ActiveDest = true)
+              suppression(b)
             }
             for (c: Int <- longueurInitSerpent + 1 to tailleSerpent) {
-              suppression(c, ActiveDest = true)
+              suppression(c)
             }
             tailleSerpent = longueurInitSerpent
             // initialiser les valeurs
@@ -440,7 +440,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
           compteur += 1
           // Disparition du réducteur au bout de x temps
           if (compteur % 30 == 0) {
-            suppression(reducteurDeSerpent, ActiveDest = true)
+            suppression(reducteurDeSerpent)
           }
           // Conditions pour l'apparition d'un obstacle mortel
           if (compteur >= 100 && compteur % 40 == 0) {
