@@ -9,44 +9,32 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
   //------------------------------------------------------------------------------------
   // Création du tableau de jeux :
-  var grille: Array[Array[Int]] = Array.fill(maxLignes, maxColonnes) {
-    0
-  }
-
+  var grille: Array[Array[Int]] = Array.fill(maxLignes, maxColonnes) {0}
   // définition des objets sur la grille (valeurs numériques)
   var jeu: String = "Marche"
-
   val teteSerpent: Int = 1
   val proie: Int = -1
   val obstacleMortel = -2
   val reducteurDeSerpent = -3
-
   val longueurInitSerpent: Int = 3
   var tailleSerpent: Int = longueurInitSerpent
-
   // Définition des variables pour la gestion des objets
   val nombresdeProiesInit: Int = 3
-
   var nombresDeProiesMangees: Int = 0
   var nombresDeReducteurs: Int = 0
-
   // Musique
   var background_music: SnakeSoundPlayer = new SnakeSoundPlayer("res/Density & Time - MAZE  NO COPYRIGHT 8-bit Music.wav", 30000)
   var snake_sound: SnakeSoundPlayer = new SnakeSoundPlayer("res/bruitage_couleuvre.wav", 2000)
-
   // position d'apparition de la tête du Serpent (Aléatoire)
   var positionLignesInit: Int = (math.random() * (maxLignes - 1)).toInt
   var positionColonnesInit: Int = (math.random() * (maxColonnes - 1)).toInt
   var orientationInitTete: Char = 'E'
 
   grille(positionLignesInit)(positionColonnesInit) = teteSerpent
-
   //pour générer la queue du serpent initiale sur la grille
   def creerSerpent(): Unit = {
     for (i: Int <- 1 until longueurInitSerpent) {
-      var positionQueueInitSerpentN: Int = positionColonnesInit + i
-
-      grille(positionLignesInit)(horsGrille(positionColonnesInit + i, maxColonnes)) = (i + 1)
+      grille(positionLignesInit)(horsGrille(positionColonnesInit + i, maxColonnes)) = i + 1
     }
   }
 
@@ -54,16 +42,15 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   creerProies(nombresdeProiesInit)
   creerReducteur(1)
 
-  // Menus TODO
   // Lancement de la musique
   background_music.play(0.06f)
 
   // générer les proies de manière aléatoire
-  def creerProies(nbProies: Int) {
+  def creerProies(nbProies: Int): Unit = {
     var countProieInit: Int = 1
     while (countProieInit <= nbProies) {
-      var yJ: Int = (math.random() * (maxLignes - 1)).toInt
-      var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
+      val yJ: Int = (math.random() * (maxLignes - 1)).toInt
+      val xJ: Int = (math.random() * (maxColonnes - 1)).toInt
 
       if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != obstacleMortel && grille(yJ)(xJ) != reducteurDeSerpent) {
         grille(yJ)(xJ) = proie
@@ -73,11 +60,11 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   }
 
   // création d'obstacles mortels
-  def creerObstacles(nombresdObstaclesMortels: Int) {
+  def creerObstacles(nombresdObstaclesMortels: Int): Unit = {
     var countObstacleInit: Int = 1
     while (countObstacleInit <= nombresdObstaclesMortels) {
-      var yJ: Int = (math.random() * (maxLignes - 1)).toInt
-      var xJ: Int = (math.random() * (maxColonnes - 1)).toInt
+      val yJ: Int = (math.random() * (maxLignes - 1)).toInt
+      val xJ: Int = (math.random() * (maxColonnes - 1)).toInt
 
       if (grille(yJ)(xJ) < 1 && grille(yJ)(xJ) != proie && grille(yJ)(xJ) != reducteurDeSerpent) {
         grille(yJ)(xJ) = obstacleMortel
@@ -87,11 +74,11 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   }
 
   // création de réducteurs (permet de réduire la taille du Serpent)
-  def creerReducteur(nombresReducteurs: Int) {
+  def creerReducteur(nombresReducteurs: Int): Unit = {
     var countReducteurInit: Int = 1
     while (countReducteurInit <= nombresReducteurs) {
-      var yR: Int = (math.random() * (maxLignes - 1)).toInt
-      var xR: Int = (math.random() * (maxColonnes - 1)).toInt
+      val yR: Int = (math.random() * (maxLignes - 1)).toInt
+      val xR: Int = (math.random() * (maxColonnes - 1)).toInt
 
       if (grille(yR)(xR) < 1 && grille(yR)(xR) != proie && grille(yR)(xR) != obstacleMortel) {
         grille(yR)(xR) = reducteurDeSerpent
@@ -102,7 +89,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   }
 
   def suppression(Quoi: Int, ActiveDest: Boolean): Unit = {
-    if (ActiveDest == true) {
+    if (ActiveDest) {
       var valCase1: Int = 0
       for (i <- grille.indices) {
         for (j <- grille(i).indices) {
@@ -118,34 +105,30 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
   // Déplacement du Serpent
   def bouger(dir: Char): Unit = {
-    var posY: Int = chercheValeurDansLeTableau(teteSerpent)(0)
-    var posX: Int = chercheValeurDansLeTableau(teteSerpent)(1)
+    val posY: Int = chercheValeurDansLeTableau(teteSerpent)(0)
+    val posX: Int = chercheValeurDansLeTableau(teteSerpent)(1)
 
     suivreTete()
 
     dir match {
-      case 'D' => {
+      case 'D' =>
         mangerParTete(horsGrille(posY, maxLignes), horsGrille(posX + 1, maxColonnes))
         orientationInitTete = 'O'
-      }
-      case 'G' => {
+      case 'G' =>
         mangerParTete(horsGrille(posY, maxLignes), horsGrille(posX - 1, maxColonnes))
         orientationInitTete = 'E'
-      }
-      case 'H' => {
+      case 'H' =>
         mangerParTete(horsGrille(posY - 1, maxLignes), horsGrille(posX, maxColonnes))
         orientationInitTete = 'N'
-      }
-      case 'B' => {
+      case 'B' =>
         mangerParTete(horsGrille(posY + 1, maxLignes), horsGrille(posX, maxColonnes))
         orientationInitTete = 'S'
-      }
     }
   }
 
   // Comportement de la tête vis a vis de son positionnement dans l'espace
   def mangerParTete(posLigne: Int, posColonne: Int): Unit = {
-    var quoiMange: Int = grille(posLigne)(posColonne)
+    val quoiMange: Int = grille(posLigne)(posColonne)
 
     if (quoiMange == proie) {
       tailleSerpent += 1
@@ -162,7 +145,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       var valCase: Int = 0
 
       grille(posLigne)(posColonne) = teteSerpent
-      tailleSerpent = (tailleSerpent / 2)
+      tailleSerpent = tailleSerpent / 2
       if (tailleSerpent <= longueurInitSerpent) {
         tailleSerpent = longueurInitSerpent
       }
@@ -180,7 +163,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       grille(posLigne)(posColonne) = teteSerpent
     }
   }
-
   // faire suivre la queue du Serpent
   def suivreTete(): Unit = {
     var valCase: Int = 0
@@ -196,26 +178,23 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       }
     }
   }
-
   // gestion des zones hors grille
   def horsGrille(pos: Int, maxVal: Int): Int = {
     // Fonction : Corrige les positions hors grille
-    var posMaxCorrige: Int = maxVal - 1
+    val posMaxCorrige: Int = maxVal - 1
 
     if (pos < 0) {
       return posMaxCorrige - (-pos - 1)
     }
     if (pos > posMaxCorrige) {
-      return (0 + ((pos - posMaxCorrige) - 1))
+      0 + ((pos - posMaxCorrige) - 1)
     }
     else {
-      return pos
+      pos
     }
   }
-
-  // Affichage de la grille, pour visu (pour controler, avant d'avoir le rendu par fub graphic)
-  /* TODO: Effacer cette fonction
-     def affichageGrille(): Unit = {
+  // Code ayant servi au débugage au début du projet (affichage sur console)
+  /* def affichageGrille(): Unit = {
     var text: String = ""
     for (i <- grille.indices) {
       for (j <- grille(i).indices) {
@@ -230,63 +209,53 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     }
     println(text)
   }*/
-
   // Affichage du Jeu
   def affichageDuJeu(): Unit = {
     // Variable de lancement du jeu
     var jeuInit: Int = 1
     var compilation: String = "Marche"
     val pixelsSize: Int = 20
-
     // Définition des dimensions du plateau de jeu
     val height: Int = maxLignes
     val width: Int = maxColonnes
     val grilleJeu: FunGraphics = new FunGraphics(width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
-
-    // TODO
+    // Sauvegarde la dernière touche activée, initialisée sur gauche
     var toucheSauv: Char = 'G'
-
     // Variables pour le menu du côté droite
     var nbObstaclesMortels: Int = 0
     var compteur: Int = 0
     var compteursauv: Int = 0
-
     // Variable disant si le jeu est en cours ou non
     var start: Boolean = true
     var startReponse: String = "Marche"
-
     // Apparence des éléments s'affichant dans le jeu
     def dessinerCorpsSerpent(i: Int, j: Int): Unit = {
       val b = new GraphicsBitmap("/res/Corps.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 399, b)
     }
-
     def desssinerProie(i: Int, j: Int): Unit = {
       val c = new GraphicsBitmap("/res/pommes.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 462, c)
     }
-
-    def dessinerObstacleMortel(i: Int, j: Int) {
+    def dessinerObstacleMortel(i: Int, j: Int): Unit = {
       val d = new GraphicsBitmap("/res/bombes.jpeg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 155, d)
     }
-
     def dessinerReducteurDeSerpent(i: Int, j: Int): Unit = {
       val e = new GraphicsBitmap("/res/cadeau.jpg")
 
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, 0, pixelsSize / 720, e)
     }
-
     def dessinerTeteSerpent(i: Int, j: Int, dirTeteBloque: Boolean = false): Unit = {
       val a = new GraphicsBitmap("/res/snake1.jpg")
       var toucheSauvTete = toucheSauv
       var angle: Double = 0
 
       // blocage de la tête pour le menu Start
-      if (dirTeteBloque == true) {
+      if (dirTeteBloque) {
         toucheSauvTete = 'G'
       }
 
@@ -299,7 +268,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       }
       grilleJeu.drawTransformedPicture(j * pixelsSize + pixelsSize / 2, i * pixelsSize + pixelsSize / 2, angle, pixelsSize / 59, a)
     }
-
     def affichageScore(couleur: String = "BLACK"): Unit = {
       var couleurAppli: Color = Color.BLACK
       if (couleur != "BLACK") {
@@ -311,40 +279,38 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       grilleJeu.drawString(width * pixelsSize + 5, 65, s"Obstacles Mortels : ${nbObstaclesMortels.toString}", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 80, s"Réducteur : ${nombresDeReducteurs.toString}", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 110, s"Press 's' . Stop/Start :", couleurAppli, 12)
-      grilleJeu.drawString(width * pixelsSize + 5, 125, s"${startReponse}", couleurAppli, 12)
+      grilleJeu.drawString(width * pixelsSize + 5, 125, s"$startReponse", couleurAppli, 12)
       grilleJeu.drawString(width * pixelsSize + 5, 140, s"Press 'e' . Exit ", couleurAppli, 12)
     }
-
-    // TODO
+    // Affichage du serpent sur le menu du jeu
     def serpentDecoratif(compteur0: Int): Unit = {
-      var compteur: Int = compteur0
-      var positionXRandom: Int = 14
-      var corps1: Int = compteur + 1
-      var corps2: Int = corps1 + 1
-      var corps3: Int = corps2 + 1
-      var corps4: Int = corps3 + 1
-      var corps5: Int = corps4 + 1
-      var corps6: Int = corps5 + 1
-      var corps7: Int = corps6 + 1
-      var corps8: Int = corps7 + 1
-      var corps9: Int = corps8 + 1
-      var corps10: Int = corps9 + 1
+      val compteur: Int = compteur0
+      val positionXRandom: Int = 14
+      val corps1: Int = compteur + 1
+      val corps2: Int = corps1 + 1
+      val corps3: Int = corps2 + 1
+      val corps4: Int = corps3 + 1
+      val corps5: Int = corps4 + 1
+      val corps6: Int = corps5 + 1
+      val corps7: Int = corps6 + 1
+      val corps8: Int = corps7 + 1
+      val corps9: Int = corps8 + 1
+      val corps10: Int = corps9 + 1
 
       toucheSauv = 'G'
 
-      dessinerTeteSerpent(positionXRandom, compteur, false)
-      dessinerCorpsSerpent(positionXRandom, (corps1))
-      dessinerCorpsSerpent(positionXRandom, (corps2))
-      dessinerCorpsSerpent(positionXRandom, (corps3))
-      dessinerCorpsSerpent(positionXRandom, (corps4))
-      dessinerCorpsSerpent(positionXRandom, (corps5))
-      dessinerCorpsSerpent(positionXRandom, (corps6))
-      dessinerCorpsSerpent(positionXRandom, (corps7))
-      dessinerCorpsSerpent(positionXRandom, (corps8))
-      dessinerCorpsSerpent(positionXRandom, (corps9))
-      dessinerCorpsSerpent(positionXRandom, (corps10))
+      dessinerTeteSerpent(positionXRandom, compteur)
+      dessinerCorpsSerpent(positionXRandom, corps1)
+      dessinerCorpsSerpent(positionXRandom, corps2)
+      dessinerCorpsSerpent(positionXRandom, corps3)
+      dessinerCorpsSerpent(positionXRandom, corps4)
+      dessinerCorpsSerpent(positionXRandom, corps5)
+      dessinerCorpsSerpent(positionXRandom, corps6)
+      dessinerCorpsSerpent(positionXRandom, corps7)
+      dessinerCorpsSerpent(positionXRandom, corps8)
+      dessinerCorpsSerpent(positionXRandom, corps9)
+      dessinerCorpsSerpent(positionXRandom, corps10)
     }
-
     grilleJeu.setKeyManager(new KeyAdapter() { // Will be called when a key has been pressed
       override def keyPressed(e: KeyEvent): Unit = {
         snake_sound.playSnakeSound(0.2f)
@@ -371,7 +337,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         }
         if (e.getKeyChar == 's') {
           if (jeu == "Marche") {
-            if (start == true) {
+            if (start) {
               start = false
               startReponse = "En pause"
             }
@@ -397,10 +363,10 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
             // Reload de la grille pour la nouvelle partie
             for (b: Int <- reducteurDeSerpent until proie) {
-              suppression(b, true)
+              suppression(b, ActiveDest = true)
             }
             for (c: Int <- longueurInitSerpent + 1 to tailleSerpent) {
-              suppression(c, true)
+              suppression(c, ActiveDest = true)
             }
             tailleSerpent = longueurInitSerpent
             // initialiser les valeurs
@@ -411,13 +377,11 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
 
       }
     })
-
     // Affichage du jeu
     def dessiner(): Unit = {
       // Pour eviter le scintillement
       grilleJeu.frontBuffer.synchronized {
         grilleJeu.clear()
-        //draw our object TODO
 
         // Délimitation des différentes zones graphiques du jeu
         grilleJeu.drawRect(0, 0, width * pixelsSize, height * pixelsSize)
@@ -426,7 +390,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         // Pour afficher le jeu
         for (i <- grille.indices) {
           for (j <- grille(i).indices) {
-            var valeur: Int = grille(i)(j)
+            val valeur: Int = grille(i)(j)
             if (valeur == teteSerpent) {
               dessinerTeteSerpent(i, j)
             }
@@ -446,22 +410,21 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         }
       }
     }
-    // TODO
+    // Variable servant dans le déplacement du serpent décoratif + "press 'p'" dans le menu
     var compteurMenu: Int = maxColonnes + 10
-    //TODO
+    // Gestion du menu général + lancement automatique du jeu
     while (compilation == "Marche" || jeuInit == 1) {
       jeuInit = 0
       while (jeu == "Marche") {
-        if (start == true) {
+        if (start) {
           // Afficher le jeu
           dessiner()
-          //affichageGrille() TODO
           // Déplacement automatique du serpent
           bouger(toucheSauv)
           compteur += 1
           // Disparition du réducteur au bout de x temps
           if (compteur % 30 == 0) {
-            suppression(reducteurDeSerpent, true)
+            suppression(reducteurDeSerpent, ActiveDest = true)
           }
           // Conditions pour l'apparition d'un obstacle mortel
           if (compteur >= 100 && compteur % 40 == 0) {
@@ -469,7 +432,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
             nbObstaclesMortels += 1
             compteursauv = compteur
           }
-          // Conditions pour l'apparition d'un reducteur de serpent
+          // Conditions pour l'apparition d'un réducteur de serpent
           if (compteur >= 200 && (math.random() * 30).toInt == 24 && nombresDeReducteurs < 1 && compteursauv != compteur) {
             creerReducteur(1)
           }
@@ -479,15 +442,15 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         //Pour que le clavier puisse fonctionner
         else {
           Thread.sleep(10)
-          var sauvegardeDirectionDeLAtete = toucheSauv
+          val sauvegardeDirectionDeLAtete = toucheSauv
 
           // Menu Pause
-          while (start == false && jeu == "Marche") {
+          while (!start && jeu == "Marche") {
             // pour eviter le scintillement
             grilleJeu.frontBuffer.synchronized {
               // Ajout du Menu Pause
               grilleJeu.drawFillRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize / 2)
-              grilleJeu.drawString(pixelsSize + 5, 80, s"${startReponse}", Color.white, 64)
+              grilleJeu.drawString(pixelsSize + 5, 80, s"$startReponse", Color.white, 64)
               affichageScore("WHITE")
               // Dessiner un serpent pour la décoration dans le Menu Pause
             }
@@ -498,8 +461,6 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
       grilleJeu.clear()
       // Apparition du Menu
       grilleJeu.frontBuffer.synchronized {
-        var decallageYSerpentDeco: Int = 0 // TODO variable inutile
-
         grilleJeu.drawRect(0, 0, width * pixelsSize + 7 * pixelsSize, height * pixelsSize)
         grilleJeu.drawString(pixelsSize + 5, 80, s"Menu", Color.black, 64)
         if (compteurMenu == -10) {
@@ -514,10 +475,9 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
     grilleJeu.clear()
     grilleJeu.drawString(pixelsSize + 5, 80, s"Fermer la fenêtre", Color.black, 64)
   }
-
   // Sert à trouver les valeurs correspondant aux différents éléments du jeu
   def chercheValeurDansLeTableau(valCherch: Int): Array[Int] = {
-    var resultpos: Array[Int] = new Array(2)
+    val resultpos: Array[Int] = new Array(2)
 
     for (i <- grille.indices) {
       for (j <- grille(i).indices) {
@@ -527,7 +487,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
         }
       }
     }
-    return resultpos
+    resultpos
   }
 }
 
