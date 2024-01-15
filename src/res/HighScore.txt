@@ -1,11 +1,10 @@
-1. ffffff 0
-2. ssss 0
-3. ddddd 0
-4. aaaaaa 0
-5. ddddddd 0
+1. aaaa 0
+2.  0
+3.  0
+4.  0
+5.  0
 6.  0
 7.  0
 8.  0
 9.  0
 10.  0
-
