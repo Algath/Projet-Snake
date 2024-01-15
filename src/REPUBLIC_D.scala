@@ -54,7 +54,7 @@ class Snake(var maxLignes: Int = 20, var maxColonnes: Int = 30) {
   creerProies(nombresdeProiesInit)
   creerReducteur(1)
 
-  //Menus TODO
+  // Menus TODO
   // Lancement de la musique
   background_music.play(0.06f)
 

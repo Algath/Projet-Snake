@@ -65,8 +65,8 @@ object HighScore extends App {
 
   println(s"Actual High Score: ${classé(0)}")
 
-  hs.lectureHS(file)
   userName = hs.askName()
   pw.println(hs.generateHS(classé, userName))
   pw.close()
+  hs.lectureHS(file)
 }
