@@ -5,9 +5,10 @@ Snake .
 
 // Lancement du Jeu : 
 
-Lancer IntelliJ IDEA (Compilateur)
+Lancer IntelliJ IDEA (Compilateur) ![image](https://github.com/Algath/Projet-Snake/assets/153815619/3b94293b-d22c-416f-8d83-56ca08b22eae)
 
-Cliquer dans le dossier src sur "REPUBLIC_D"
+Cliquer dans le dossier src sur "REPUBLIC_D"![image](https://github.com/Algath/Projet-Snake/assets/153815619/4b43785b-aad6-470e-a31b-07c6aaf9d659)
+
 
 Cliquer faire le run (compiler "object test" extends App")
 
