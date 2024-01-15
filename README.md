@@ -59,6 +59,9 @@ Depuis le "Menu Principale"
 
 
 Touche 'e' : Arrête le Jeu (disparition du Menu) et invitation à fermer la fenêtre de Jeu.
+
+![image](https://github.com/Algath/Projet-Snake/assets/153815619/4153defd-ef76-4e0d-9fdb-d186e2538d14)
+
 Touche 'p' : Permet de relancer une nouvelle partie.
 Touche 'p' : Permet de relancer une nouvelle partie.
 
